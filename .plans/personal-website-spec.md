@@ -155,10 +155,10 @@ Cross-Origin-Opener-Policy: same-origin
 - [x] taste-skill installed and committed
 - [x] Redesign tried twice (taste-skill split stage, terminal/CRT); user rejected both and kept v1
 - [x] LinkedIn URL (https://www.linkedin.com/in/shreyas-suman-ba9691355/)
-- [ ] Connect Cloudflare Pages, custom domain, `www` redirect, SSL Full (strict), CAA
+- [x] Connect Cloudflare Pages, custom domain, `www` → apex redirect (Redirect Rule, 301), SSL Full (strict), Always Use HTTPS, min TLS 1.2, CAA (verified 2026-10-19; Mozilla Observatory A+ 130/130, cert from Google Trust Services)
 - [ ] Web Analytics token
-- [ ] Launch checklist (§6)
-- [ ] HSTS preload (≈1 week after launch)
+- [x] Launch checklist (§6), except LinkedIn Post Inspector
+- [ ] HSTS preload: submit at hstspreload.org on or after 2026-10-26
 - [ ] Later, optional: resume PDF, blog section
 
 ## 8. Open questions
