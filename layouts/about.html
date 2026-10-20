@@ -1,0 +1,17 @@
+{{ define "main" }}
+<section class="wrap page-head">
+  <p class="eyebrow"><span class="prompt">&gt;</span> cat about.txt</p>
+  <h1 class="display">{{ .Title }}</h1>
+  <div class="lede about-intro">{{ .Content }}</div>
+</section>
+
+<section class="wrap about-off" aria-labelledby="off-title">
+  <h2 id="off-title" class="label">// When I'm not coding</h2>
+  <ul class="interests">
+    <li>Producing music</li>
+    <li>Playing poker</li>
+    <li>Chess</li>
+    <li>Skateboarding</li>
+  </ul>
+</section>
+{{ end }}
