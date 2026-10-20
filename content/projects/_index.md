@@ -4,4 +4,4 @@ cascade:
   build:
     publishResources: false
 ---
-Things I've built, and how they came together.
+Things I've built + how they came together.
