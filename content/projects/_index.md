@@ -1,5 +1,5 @@
 ---
-title: Selected work
+title: Projects
 cascade:
   build:
     publishResources: false
