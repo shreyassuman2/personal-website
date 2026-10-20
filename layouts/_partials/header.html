@@ -1,0 +1,8 @@
+<header class="site-header wrap">
+  <a class="wordmark" href="/" {{ if .IsHome }}aria-current="page"{{ end }}>Shreyas Suman</a>
+  <nav aria-label="Main">
+    <a href="/projects/">Work</a>
+    <a href="{{ site.Params.github }}" rel="me noopener">GitHub</a>
+    {{ with site.Params.linkedin }}<a href="{{ . }}" rel="me noopener">LinkedIn</a>{{ end }}
+  </nav>
+</header>

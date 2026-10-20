@@ -1,0 +1,18 @@
+{{/* Project card. Context: dict "page" <page> "n" <index> */}}
+{{ $p := .page }}
+<li class="card">
+  <a href="{{ $p.RelPermalink }}">
+    {{ with $p.Resources.Get $p.Params.cover }}
+      {{ $img := partial "img.html" (dict "img" . "widths" (slice 480 960) "sizes" "(min-width: 48rem) 30rem, 100vw" "alt" "") }}
+      <div class="card-media">{{ $img }}</div>
+    {{ end }}
+    <div class="card-body">
+      <span class="card-num">{{ printf "%02d" .n }}</span>
+      <h3>{{ $p.Title }}</h3>
+      <p>{{ $p.Params.summary }}</p>
+      <ul class="tags" aria-label="Stack">
+        {{ range first 4 $p.Params.stack }}<li>{{ . }}</li>{{ end }}
+      </ul>
+    </div>
+  </a>
+</li>

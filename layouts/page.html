@@ -1,0 +1,38 @@
+{{ define "main" }}
+<article class="project">
+  <header class="wrap page-head">
+    <a class="back" href="/projects/">← All work</a>
+    <p class="eyebrow">{{ with .Params.kicker }}{{ . }} · {{ end }}{{ .Date.Format "January 2006" }}</p>
+    <h1 class="display">{{ .Title }}</h1>
+    <p class="lede">{{ .Params.summary }}</p>
+    <p class="project-links">
+      {{ with .Params.demo }}<a href="{{ . }}" rel="noopener">Live demo ↗</a>{{ end }}
+      {{ with .Params.repo }}<a href="{{ . }}" rel="noopener">Source ↗</a>{{ end }}
+    </p>
+  </header>
+
+  <dl class="wrap facts">
+    {{ with .Params.role }}<div><dt>Role</dt><dd>{{ . }}</dd></div>{{ end }}
+    {{ with .Params.team }}<div><dt>Team</dt><dd>{{ . }}</dd></div>{{ end }}
+    {{ with .Params.stack }}<div><dt>Stack</dt><dd><ul class="tags">{{ range . }}<li>{{ . }}</li>{{ end }}</ul></dd></div>{{ end }}
+  </dl>
+
+  {{ with .Resources.Get .Params.cover }}
+  <figure class="wrap cover">
+    {{ partial "img.html" (dict "img" . "widths" (slice 800 1600) "sizes" "(min-width: 64rem) 60rem, 100vw" "alt" ($.Params.coverAlt | default "")) }}
+  </figure>
+  {{ end }}
+
+  <div class="wrap prose">
+    {{ .Content }}
+  </div>
+
+  {{ with .NextInSection | default (index .CurrentSection.Pages.ByWeight 0) }}
+    {{ if ne .RelPermalink $.RelPermalink }}
+    <nav class="wrap next" aria-label="Next project">
+      <a href="{{ .RelPermalink }}"><span class="label">Next</span><span class="next-title">{{ .Title }} →</span></a>
+    </nav>
+    {{ end }}
+  {{ end }}
+</article>
+{{ end }}

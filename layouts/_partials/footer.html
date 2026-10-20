@@ -1,0 +1,7 @@
+<footer class="site-footer wrap">
+  <p>© {{ now.Year }} Shreyas Suman</p>
+  <p class="footer-links">
+    <a href="{{ site.Params.github }}" rel="me noopener">GitHub</a>
+    {{ with site.Params.linkedin }}<a href="{{ . }}" rel="me noopener">LinkedIn</a>{{ end }}
+  </p>
+</footer>

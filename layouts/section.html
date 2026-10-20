@@ -1,0 +1,14 @@
+{{ define "main" }}
+<section class="wrap page-head">
+  <p class="eyebrow">Work</p>
+  <h1 class="display">{{ .Title }}</h1>
+  {{ with .Content }}<div class="lede">{{ . }}</div>{{ end }}
+</section>
+<section class="wrap">
+  <ol class="cards">
+    {{ range $i, $p := .Pages.ByWeight }}
+      {{ partial "card.html" (dict "page" $p "n" (add $i 1)) }}
+    {{ end }}
+  </ol>
+</section>
+{{ end }}

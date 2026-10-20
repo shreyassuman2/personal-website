@@ -1,0 +1,6 @@
+{{ $img := .Page.Resources.Get (.Get "src") }}
+{{ if not $img }}{{ errorf "shot: %q not found in %s" (.Get "src") .Page.File.Path }}{{ end }}
+<figure class="shot">
+  {{ partial "img.html" (dict "img" $img "widths" (slice 800 1600) "sizes" "(min-width: 64rem) 60rem, 100vw" "alt" (.Get "alt")) }}
+  {{ with .Get "caption" }}<figcaption>{{ . | markdownify }}</figcaption>{{ end }}
+</figure>

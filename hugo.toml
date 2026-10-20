@@ -2,7 +2,22 @@ baseURL = 'https://shreyassuman.com/'
 locale = 'en-us'
 title = 'Shreyas Suman'
 enableRobotsTXT = true
+disableKinds = ['taxonomy', 'term', 'rss']
+
+[params]
+  description = 'Shreyas Suman builds security tools and software. Projects: TalosAI and Sleeper.'
+  github = 'https://github.com/shreyassuman2'
+  linkedin = ''          # full profile URL; the link is hidden while empty
+  cfBeaconToken = ''     # Cloudflare Web Analytics token; no script is emitted while empty
 
 [markup.highlight]
   # Emit CSS classes instead of inline styles so the strict CSP (style-src 'self') holds
   noClasses = false
+
+[imaging]
+  resampleFilter = 'Lanczos'
+  [imaging.webp]
+    quality = 80
+
+[sitemap]
+  changeFreq = 'monthly'

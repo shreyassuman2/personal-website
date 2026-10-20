@@ -1,0 +1,18 @@
+{{/*
+  Responsive image. Context: dict "img" <resource> "widths" <slice> "sizes" <string> "alt" <string>
+  Re-encoding to WebP also drops EXIF metadata. Animated GIFs are served as-is.
+*/}}
+{{ $img := .img }}
+{{ if eq $img.MediaType.SubType "gif" }}
+<img src="{{ $img.RelPermalink }}" width="{{ $img.Width }}" height="{{ $img.Height }}" alt="{{ .alt }}" loading="lazy" decoding="async">
+{{ else }}
+  {{ $set := slice }}
+  {{ $largest := $img }}
+  {{ range .widths }}
+    {{ $w := cond (gt . $img.Width) $img.Width . }}
+    {{ $r := $img.Resize (printf "%dx webp" $w) }}
+    {{ $set = $set | append (printf "%s %dw" $r.RelPermalink $r.Width) }}
+    {{ $largest = $r }}
+  {{ end }}
+<img src="{{ $largest.RelPermalink }}" srcset="{{ delimit $set ", " }}" sizes="{{ .sizes }}" width="{{ $largest.Width }}" height="{{ $largest.Height }}" alt="{{ .alt }}" loading="lazy" decoding="async">
+{{ end }}

@@ -1,0 +1,20 @@
+{{ define "main" }}
+<section class="hero wrap">
+  <p class="eyebrow">Hi, I'm</p>
+  <h1 class="display">Shreyas <em>Suman</em></h1>
+  <div class="bio">{{ .Content }}</div>
+  <p class="hero-links">
+    <a href="{{ site.Params.github }}" rel="me noopener">GitHub ↗</a>
+    {{ with site.Params.linkedin }}<a href="{{ . }}" rel="me noopener">LinkedIn ↗</a>{{ end }}
+  </p>
+</section>
+
+<section class="work wrap" aria-labelledby="work-title">
+  <h2 id="work-title" class="label">Selected work</h2>
+  <ol class="cards">
+    {{ range $i, $p := (site.GetPage "/projects").Pages.ByWeight }}
+      {{ partial "card.html" (dict "page" $p "n" (add $i 1)) }}
+    {{ end }}
+  </ol>
+</section>
+{{ end }}
