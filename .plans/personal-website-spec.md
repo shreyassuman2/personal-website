@@ -1,6 +1,36 @@
 # Personal Website — Spec
 
-Owner: Shreyas Suman · Drafted: 2026-10-19 · Target v1: this weekend (2026-10-24/25)
+Owner: Shreyas Suman · Drafted: 2026-10-19 · Last updated: 2026-10-19 (end of session 1)
+
+## 0. Status / handoff
+
+**Where things stand**
+- Site is built (Hugo, hand-written theme) and pushed to the private repo `github.com/shreyassuman2/personal-website`, branch `main`. Latest pushed commit: `5b722ed` (taste-skill install). Nothing is deployed yet.
+- Domain `shreyassuman.com` is registered on Cloudflare. Nameservers, registrar lock, DNSSEC and the null-mail records (§5.3) are all live and verified with `dig`.
+- Local preview: `hugo server` from the project root → http://localhost:1313 (live reload; `_headers` is not applied locally).
+
+**Next task: redesign with taste-skill (requested; do NOT push, the user wants to review locally first).**
+- The skill is installed at `.claude/skills/design-taste-frontend/` (skill name `design-taste-frontend`). Follow its `SKILL.md` "Redesign" path: inspect the current site into `.taste-skill/before`, write the argument and copy deck, deal a direction with `draw.mjs`, rebuild, gate with `lint.mjs` + `inspect.mjs`, look at screenshots, then `.taste-skill/after`.
+- The current design breaks several of the skill's house rules, so expect them to change: monospace labels/tags/footer, eyebrows ("Hi, I'm", kicker line), 01/02 card numbering, the italic orange accent word in the name, hairline rules (`.label::after`, `.facts`, footer border), 1px outlined tags/cards, and the cream ground + rust accent (the skill's banned "assistant palette").
+- **Constraints the redesign must keep** (from this spec, not negotiable without asking the user):
+  - Stay on Hugo; edit `layouts/`, `assets/css/main.css`, `content/`. No framework migration, no npm build step for the site.
+  - CSP in `static/_headers`: no inline `<script>` or `style=""`, no third-party scripts except Cloudflare Analytics, no hotlinked images or fonts. Any JS (motion, a "live thing") goes in a file under `assets/` or `static/`. Any found picture is downloaded into the repo and credited in the footer.
+  - Fonts stay self-hosted WOFF2 (currently Instrument Serif in `static/fonts/`, plus a TTF in `assets/og/` used for OG images; update both if the face changes).
+  - Light/dark via `prefers-color-scheme`, no toggle. `prefers-reduced-motion` respected. Content must render with JS off.
+  - Real content only: TalosAI and Sleeper text comes from their READMEs; no invented stats, quotes or logos.
+- **Open tension to raise with the user:** this spec said "no JS, light motion only"; the skill requires a motion layer (≥8 moving elements) and "one live thing". Ask whether a small external JS file is OK before adding it.
+
+**Deploy steps (after the redesign is approved)**
+1. Cloudflare → Workers & Pages → Create → Pages → Connect to Git, GitHub App scoped to **only** `personal-website`.
+2. Build command `hugo --gc --minify`, output `public`, env var `HUGO_VERSION=0.168.0`.
+3. Custom domains: `shreyassuman.com` and `www.shreyassuman.com`; redirect `www` → apex.
+4. Then: SSL Full (strict), Always Use HTTPS, CAA records (Cloudflare adds its own CAs once any CAA exists), Web Analytics token → `cfBeaconToken` in `hugo.toml`, run the checklist in §6.
+
+**Still needed from the user**
+- LinkedIn profile URL → `linkedin` in `hugo.toml` (the link is hidden while empty).
+- Confirm the TalosAI "My role" text (it came from hackathon notes, not the repo): malware lead, co-owned prompts, built the first triage backend, ran the accuracy evals.
+- OK from teammate Enrique Mowad, whose name shows in the TalosAI screenshots' sidebar (optional).
+- Optionally a still screenshot of Sleeper's results for its card (the GIF's first frame is a faded empty state).
 
 ## 1. Goals
 
@@ -18,77 +48,77 @@ Owner: Shreyas Suman · Drafted: 2026-10-19 · Target v1: this weekend (2026-10-
 ## 2. Content
 
 ### Home page (`/`)
-- **Above the fold:** name plus a short 2–3 sentence bio paragraph covering interests (security tooling, building things) and what Shreyas is looking for, e.g. "seeking summer 2027 internships". End with the GitHub and LinkedIn icons.
-- **Below:** project card grid.
-- Footer: socials, © year, link to the site's own source (repo is private, so omit or link the case study instead).
+- **Bio (user-approved, keep exactly):** one sentence, "Incoming freshman at Santa Clara University studying Computer Science and Engineering." Do not add an internship line; the user removed it on purpose.
+- Name, bio, GitHub (and LinkedIn once the URL exists), then the projects.
+- Footer: © year, GitHub/LinkedIn. The repo is private, so no source link.
 
-### Projects (`/projects/<slug>/`)
-Card grid on the home page → one detail page per project. Each card: title, one-line summary, 2–4 stack tags, thumbnail.
-
-Each detail page has these sections:
-1. **Problem → Approach → Result** (short; ~150–300 words total)
-2. **My role & team.** What Shreyas personally built. This is critical for hackathon work.
-3. **Screenshots / demo GIF.** Strip EXIF, resize, and serve as WebP/AVIF through Hugo image processing.
-4. **Stack tags + repo/demo links**
+### Projects
+- Section page at `/projects/` titled **"Projects"** (renamed from "Selected work"/"Work" at the user's request; nav link and "← All projects" back link match). The home page section heading is still "Selected work".
+- One page bundle per project in `content/projects/<slug>/` with front matter: `title, kicker, date, weight, summary, role, team, stack[], repo, demo, cover, coverAlt`. Screenshots go in the bundle and are placed with the `{{< shot src alt caption >}}` shortcode.
+- `content/projects/_index.md` sets `cascade.build.publishResources: false`, so original PNGs are never published; only resized WebP (which also strips EXIF) and the GIF actually referenced go out.
+- Each page: Problem → Approach → Result, My role, screenshots, stack tags, repo/demo links.
 
 Launch set:
-- **TriageLens.** SOC phishing-triage tool from the 2026-10-12 hackathon (Track 1).
-- **Sleeper.** https://github.com/shreyassuman2/sleeper. Confirm the repo is public before linking; if it's private, link a demo or screenshots instead.
+- **TalosAI** (the hackathon project's final name; it was called TriageLens during planning). Repo `shreyassuman2/soc-phish-triage` (public), live demo `https://rise-riff-67930737.figma.site`. CrowdStrike × AIC Hackathon, 2026-10-12, 4-person team. Screenshots used: `2-phishing-trap.png` (cover), `1-alert-critical.png`, `3-ransomware.png`. The dashboard screenshot was dropped because browser-extension icons show on its edge.
+- **Sleeper.** Repo `shreyassuman2/sleeper` (public), live `https://sleeper-pick.vercel.app/`. Solo. Cover is `demo.gif` from the repo.
 
 ### Socials
-GitHub and LinkedIn only. Use `rel="me noopener"` on external links.
+GitHub (`https://github.com/shreyassuman2`) and LinkedIn (URL pending). Use `rel="me noopener"` on external links.
 
 ## 3. Design
 
-- **Direction: creative / personal, expressed only through styling.** Every project listed is a code project. The creative side (music, 3D) shows in the typography, color, layout, and small custom touches, such as a hand-made SVG mark or a subtle texture made from the 3D or art work on the site.
-- **Motion:** light touches only (CSS transitions, hover states). Respect `prefers-reduced-motion`.
-- **Theme:** follows the OS setting via `prefers-color-scheme`, with no toggle and no JS. Define all colors as CSS custom properties with light and dark sets.
-- **No JS required** to render any page. The only script is Cloudflare Web Analytics.
-- Fonts: self-hosted (WOFF2, subset). No Google Fonts request; this keeps the CSP tight and avoids a third-party request.
-- Responsive down to 360px wide. Target Lighthouse ≥ 95 in all four categories.
-- **Link previews:** a custom Open Graph image per page, generated at build time with Hugo's `images.Text` / image filters (project title on the site's background). **Stretch goal.** If it isn't done by the weekend, ship one site-wide OG image and add per-page images later.
-- Basic SEO: `<title>`, meta description, canonical URL, `sitemap.xml` (Hugo built-in), `robots.txt`.
+Current (v1, pre-redesign): Instrument Serif display + system sans, cream ground `#f3efe6` / ink `#1d1b17` / rust accent `#c2410c`, dark set under `prefers-color-scheme`, SVG paper-grain overlay, mono labels and tags, 2-column project cards. See §0 for what the taste-skill redesign is expected to change.
+
+Fixed requirements regardless of look:
+- **Creative / personal, expressed only through styling.** Only code projects are listed; music/3D shows up in the look, not as content.
+- **Theme:** follows the OS setting via `prefers-color-scheme`, no toggle. All colours as CSS custom properties with light and dark sets.
+- Pages render fully without JS. The only third-party script allowed is Cloudflare Web Analytics.
+- Self-hosted fonts (WOFF2). No Google Fonts request.
+- Responsive down to 360px. Target Lighthouse ≥ 95 in all four categories.
+- **Link previews (done):** per-page OG image generated at build time in `layouts/_partials/og-image.html` from `assets/og/base.png` plus `images.Text` with `assets/og/InstrumentSerif-Regular.ttf`. Update its colours/font if the redesign changes them.
+- SEO (done): title, description, canonical, `sitemap.xml`, `robots.txt`. Taxonomies and RSS are disabled in `hugo.toml`.
 
 ## 4. Technical stack
 
-| Piece | Choice | Why |
+| Piece | Choice | Notes |
 |---|---|---|
-| Generator | **Hugo** (extended, pinned version) | Single binary and no npm dependency tree, so the supply-chain risk is smallest |
-| Hosting | **Cloudflare Pages** | Free, global CDN, automatic HTTPS, `_headers` file support |
-| Registrar + DNS | **Cloudflare Registrar** | Sells at cost, with registrar, DNS, and hosting in one account to secure |
-| Analytics | **Cloudflare Web Analytics** | Cookieless, so no consent banner is needed |
-| Repo | **Private GitHub repo** | Cloudflare Pages deploys from it on push to `main` |
+| Generator | **Hugo v0.168.0 extended** | Binary at `~/.local/bin/hugo` (checksum verified, Apple-notarized). Uses the new template layout: `layouts/baseof.html`, `home.html`, `section.html`, `page.html`, `404.html`, `_partials/`, `_shortcodes/` |
+| Hosting | **Cloudflare Pages** | Not connected yet; see §0 |
+| Registrar + DNS | **Cloudflare Registrar** | Done |
+| Analytics | **Cloudflare Web Analytics** | `cfBeaconToken` param in `hugo.toml`; the beacon script only renders when set |
+| Repo | **Private GitHub repo** `shreyassuman2/personal-website` | |
 
-- Pin the Hugo version in Cloudflare Pages through the `HUGO_VERSION` env var so builds are reproducible.
-- Prefer a hand-built theme, or a small vendored theme copied into the repo. Avoid a git-submodule theme, which pulls code you haven't reviewed on every build.
+Key files: `hugo.toml`, `assets/css/main.css` (minified, fingerprinted, SRI), `layouts/_partials/{head,header,footer,card,img,og-image}.html`, `layouts/_shortcodes/shot.html`, `static/_headers`, `static/favicon.svg`, `static/fonts/`.
 
-### Repo hygiene (important)
-`/Users/shreyas` is itself a git repo. `git status` in this folder shows the whole home directory (`.zsh_history`, `.claude.json`, `Library/`, …).
-- Run `git init` inside `~/programming/personal website/` so the site has its **own** repo. Check that `git rev-parse --show-toplevel` prints the site folder.
-- Separately, decide whether the home-directory repo was intentional. If it's ever pushed anywhere, it would leak shell history and tokens.
-- Add a `.gitignore` covering `public/`, `resources/_gen/`, `.hugo_build.lock`, and `.DS_Store`.
-- Consider renaming the folder to `personal-website` (no space) to avoid quoting problems in scripts.
+Config notes: `locale` (not `languageCode`), `[imaging.webp] quality` (top-level `imaging.quality` is deprecated in 0.163+), `markup.highlight.noClasses = false` for the CSP.
+
+### Repo and git (done)
+- The old git repo at `/Users/shreyas` (home directory) was **deleted** (it only held a README commit). The site has its own repo.
+- Global and local git identity: `shreyassuman2 <338907229+shreyassuman2@users.noreply.github.com>`. `gh` is logged in as `shreyassuman2`.
+- `http.postBuffer` is raised to 50 MB in this repo's config; pushes with images failed with HTTP 400 without it.
+- `.gitignore`: `.DS_Store`, `public/`, `resources/_gen/`, `.hugo_build.lock`, `.env*`. `.taste-skill/` (the skill's working files and screenshots) is ignored too.
+- `.claude/skills/design-taste-frontend/` and `skills-lock.json` are committed (installed with `npx skills@1.7.2 add Leonxlnx/taste-skill -a claude-code`). Hugo never publishes them.
+- Folder name still has a space (`personal website`); quote paths in shell commands. Watch zsh: unquoted `?` in `gh api` URLs globs, and `set -- $var` doesn't word-split.
 
 ## 5. Security
 
-Most threats to a static personal site come from **account takeover, domain loss, and impersonation**, not from bugs in the code. The spec addresses them in that order.
+Most threats to a static personal site come from **account takeover, domain loss, and impersonation**, not from bugs in the code.
 
 ### 5.1 Accounts
-- Cloudflare, GitHub, and the owning Gmail all use **passkeys or hardware keys**. Turn off SMS as a fallback. Store the recovery codes offline.
-- The owning email is **personal Gmail** (not school email, which is deleted after graduation).
-- Cloudflare: if you use API tokens, scope them narrowly. Don't use the Global API key.
-- GitHub: have Cloudflare Pages use the GitHub App with access to **only this repo**, not "all repositories".
+- Cloudflare, GitHub, and the owning Gmail all use **passkeys**. No SMS fallback. Recovery codes stored offline.
+- The owning email is **personal Gmail**.
+- Cloudflare API tokens, if any, scoped narrowly. Never the Global API key.
+- Cloudflare Pages' GitHub App gets access to **only this repo**.
 
-### 5.2 Domain
-- Register `shreyassuman.com` for **multiple years** with auto-renew on. Set a calendar reminder 60 days before expiry and whenever the card on file expires.
-- Keep **registrar lock** on (Cloudflare's default). Cloudflare redacts WHOIS automatically.
-- Turn on **DNSSEC** (one click on Cloudflare Registrar).
-- Add a **CAA** record that allows only the CA(s) Cloudflare uses, so no one else can be issued a certificate for the domain.
-- Redirect `www` → apex, or apex → `www`; pick one canonical host.
-- Avoid dangling DNS: if you remove a Pages project or service, delete its CNAME at the same time, so the subdomain can't be taken over.
+### 5.2 Domain (verified 2026-10-19)
+- ✅ Registered at Cloudflare, nameservers `scott`/`susan.ns.cloudflare.com`, `client transfer prohibited` (registrar lock).
+- ✅ DNSSEC active (DS record in `.com`, resolvers validate).
+- ⚠️ Registered for **1 year**, expiring **2027-10-20**. Keep auto-renew on; reminder set for 2027-08-20.
+- ⏳ CAA records: add after Pages is connected.
+- ⏳ Redirect `www` → apex.
+- Avoid dangling DNS: when removing a Pages project or service, delete its DNS record at the same time.
 
-### 5.3 Anti-spoofing (no email on the domain)
-Publish records saying "this domain sends no mail":
+### 5.3 Anti-spoofing (✅ live and verified)
 ```
 shreyassuman.com.          TXT  "v=spf1 -all"
 _dmarc.shreyassuman.com.   TXT  "v=DMARC1; p=reject; sp=reject; adkim=s; aspf=s"
@@ -96,9 +126,9 @@ shreyassuman.com.          MX   0 .          ; null MX (RFC 7505)
 *._domainkey.shreyassuman.com. TXT "v=DKIM1; p="
 ```
 
-### 5.4 HTTPS & headers (`static/_headers` → Cloudflare Pages)
+### 5.4 HTTPS & headers (`static/_headers`, written; applies once on Cloudflare Pages)
 - Cloudflare SSL mode **Full (strict)**, *Always Use HTTPS* on, minimum TLS 1.2.
-- HSTS: `max-age=63072000; includeSubDomains; preload`. Submit to hstspreload.org **only after** confirming every subdomain serves HTTPS, because preload is hard to undo.
+- HSTS preload: submit to hstspreload.org only after about a week live with every subdomain on HTTPS.
 - Headers on `/*`:
 ```
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
@@ -108,41 +138,40 @@ Referrer-Policy: strict-origin-when-cross-origin
 Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
 Cross-Origin-Opener-Policy: same-origin
 ```
-- No inline `<script>` or `style=""` attributes. Hugo templates must put all CSS in files, so `style-src 'self'` holds. Check that Hugo's generated HTML (e.g. syntax highlighting) doesn't emit inline styles. Use `markup.highlight.noClasses = false`.
-- Target: **A+** on securityheaders.com and on the Mozilla HTTP Observatory.
-- Preview deploys (`*.pages.dev`) are public. Add Cloudflare Access to them, or accept that drafts can be seen there.
+- Also: `/css/*` cached 1 year immutable (fingerprinted), `/fonts/*` cached 30 days.
+- The current build has **no inline styles or scripts** (checked with grep over `public/`). Re-check after the redesign: `grep -rlE 'style=|<script>' public --include='*.html'`.
+- Target **A+** on securityheaders.com and Mozilla HTTP Observatory.
+- `*.pages.dev` preview deploys are public; add Cloudflare Access or accept that.
 
 ### 5.5 Content & privacy
-- Strip EXIF/GPS from every image before committing (`exiftool -all= file`). Hugo re-encoding also removes it, but originals in the repo keep it.
-- Screenshots: check for visible tokens, emails, internal URLs, and terminal history, especially in TriageLens SOC screenshots and sample phishing data.
+- Only resized WebP copies of screenshots are published (EXIF stripped by re-encoding); originals stay in the private repo.
+- Screenshots were checked: demo data only (`.example` domains, lab-generated alerts). A teammate's name is visible (see §0).
 - Never commit `.env` files or API keys. The site needs none.
 
-## 6. Deployment flow
+## 6. Deployment flow & launch checklist
 
-1. `git push` to `main` → Cloudflare Pages builds with `hugo --minify` → deploys to production.
-2. Other branches → preview URL.
-3. After launch, check: securityheaders.com, Mozilla HTTP Observatory, SSL Labs (A+), Lighthouse, link preview in LinkedIn Post Inspector, and that DMARC/SPF records resolve (`dig TXT _dmarc.shreyassuman.com`).
+1. `git push` to `main` → Cloudflare Pages builds `hugo --gc --minify` → production.
+2. Other branches → preview URL on `*.pages.dev`.
+3. After launch, check: securityheaders.com, Mozilla HTTP Observatory, SSL Labs (A+), Lighthouse, link preview in LinkedIn Post Inspector, `dig TXT _dmarc.shreyassuman.com`, `www` redirect, 404 page.
 
-## 7. Weekend plan
+## 7. Progress
 
-**Saturday**
-- [ ] Check `shreyassuman.com` availability and register it on Cloudflare (multi-year, auto-renew, DNSSEC).
-- [ ] Set up passkeys on Gmail, Cloudflare, and GitHub.
-- [ ] Create a new private GitHub repo and `git init` in the site folder; `hugo new site`.
-- [ ] Base layout, CSS tokens for light and dark, home page with bio and project grid.
-
-**Sunday**
-- [ ] TriageLens and Sleeper detail pages (write-up, role, screenshots, stack).
-- [ ] `_headers`, `robots.txt`, favicon, site-wide OG image.
-- [ ] Connect Cloudflare Pages, add the custom domain, set SSL to Full (strict), add CAA records and null-mail DNS records.
-- [ ] Turn on Web Analytics. Run the verification checklist in §6.
-
-**Later**
-- [ ] Per-page generated OG images.
-- [ ] HSTS preload submission (after ~1 week with no problems).
-- [ ] Resume PDF (optional) and blog section (optional).
+- [x] Register `shreyassuman.com` (1 year, auto-renew), registrar lock, DNSSEC
+- [x] Null-mail DNS records
+- [x] Private repo, own git identity, home-dir repo removed
+- [x] Hugo installed and site scaffolded
+- [x] Layouts, CSS tokens (light/dark), home page, Projects page, TalosAI and Sleeper pages, 404
+- [x] `_headers`, `robots.txt`, sitemap, favicon, per-page OG images
+- [x] taste-skill installed and committed
+- [ ] **Redesign with taste-skill (local only, user reviews before pushing)**
+- [ ] LinkedIn URL
+- [ ] Connect Cloudflare Pages, custom domain, `www` redirect, SSL Full (strict), CAA
+- [ ] Web Analytics token
+- [ ] Launch checklist (§6)
+- [ ] HSTS preload (≈1 week after launch)
+- [ ] Later, optional: resume PDF, blog section
 
 ## 8. Open questions
-- Is `shreyassuman.com` available? If not, the fallback is `shreyassuman.dev`, since the .dev TLD forces HTTPS for the whole domain.
-- Is the Sleeper repo public?
-- Bio wording and the internship timeframe to mention.
+- Is a small external JS file OK for the redesign's motion layer / "live thing"? (See §0.)
+- LinkedIn URL.
+- Confirm the TalosAI role wording.
