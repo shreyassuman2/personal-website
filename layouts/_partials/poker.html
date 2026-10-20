@@ -1,22 +1,27 @@
 {{/* Poker hand runout with live equity. Animated in main.css (.pk-*). */}}
-<div class="pk" role="img" aria-label="A poker hand: ace-king of spades against pocket queens. Win odds go 46%, 54% after a flush-draw flop, 34% after the turn, and the ace on the river wins it.">
-  <div class="pk-street"><span>Preflop</span><span>Flop</span><span>Turn</span><span>River</span></div>
-  <div class="pk-row">
-    <span class="pk-who">You</span>
+<div class="pk" role="img" aria-label="A poker hand, 100 big blinds all-in preflop: hero holds ace-king of spades against villain's pocket queens. Hero's equity goes 46% (EV −7bb), 54% after a flush-draw flop (+9bb), 34% after the turn (−32bb), and the ace on the river wins it (+100bb).">
+  <div class="pk-row pk-head">
+    <span class="pk-street"><span>Preflop</span><span>Flop</span><span>Turn</span><span>River</span></span>
+    <span class="pk-col">EQ</span>
+    <span class="pk-col pk-ev">EV</span>
+  </div>
+  <div class="pk-row pk-hero">
+    <span class="pk-who">Hero</span>
     <div class="pk-cards">
       <span class="pk-card pk-hole pk-h1">A♠<i class="pk-back"></i></span>
       <span class="pk-card pk-hole pk-h2">K♠<i class="pk-back"></i></span>
     </div>
-    <span class="pk-win">Wins</span>
     <span class="pk-pct"><span>46%</span><span>54%</span><span>34%</span><span>100%</span></span>
+    <span class="pk-pct pk-ev"><span>−7bb</span><span>+9bb</span><span>−32bb</span><span>+100bb</span></span>
   </div>
   <div class="pk-row">
-    <span class="pk-who">Opp</span>
+    <span class="pk-who">Villain</span>
     <div class="pk-cards">
       <span class="pk-card red pk-hole pk-h3">Q♥<i class="pk-back"></i></span>
       <span class="pk-card red pk-hole pk-h4">Q♦<i class="pk-back"></i></span>
     </div>
     <span class="pk-pct"><span>54%</span><span>46%</span><span>66%</span><span>0%</span></span>
+    <span class="pk-pct pk-ev"><span>+7bb</span><span>−9bb</span><span>+32bb</span><span>−100bb</span></span>
   </div>
   <div class="pk-board">
     <span class="pk-slot"><span class="pk-card">J♠</span></span>
@@ -26,4 +31,5 @@
     <span class="pk-slot"><span class="pk-card red">A♥</span></span>
   </div>
   <div class="pk-bar"><span></span></div>
+  <p class="pk-pot">100bb all-in preflop · pot 200bb</p>
 </div>
