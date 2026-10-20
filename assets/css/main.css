@@ -187,27 +187,36 @@ a:hover { color: var(--accent); }
 .interest summary { display: flex; cursor: pointer; list-style: none; }
 .interest summary::-webkit-details-marker { display: none; }
 .interest summary::before { content: "> "; white-space: pre; color: var(--accent); }
-.interest summary::after { content: "[+]"; margin-left: auto; padding-left: 1rem; font-weight: 400; color: var(--muted); }
+.interest summary::after { content: "[+]"; margin-left: auto; padding-inline: 0.125rem; font-weight: 400; color: var(--muted); }
 .interest details[open] summary::after { content: "[-]"; color: var(--accent); }
 @media (hover: hover) and (pointer: fine) {
   .interest summary { transition: color 160ms ease; }
   .interest summary:hover { color: var(--accent); }
 }
-/* Panel height opens smoothly where ::details-content is supported; elsewhere it opens instantly */
+/* Panels open with a scanline: a red line sweeps down and the content is revealed behind it.
+   The height eases open where ::details-content is supported (and eases shut); the clip wipe on the
+   body gives the same reveal everywhere else, e.g. Safari. All three share one duration and curve. */
 .interest details::details-content {
   block-size: 0;
   overflow: hidden;
-  transition: block-size 300ms var(--ease-out), content-visibility 300ms allow-discrete;
+  transition: block-size 420ms var(--ease-out), content-visibility 420ms allow-discrete;
 }
 .interest details[open]::details-content { block-size: auto; }
 
 .interest-body { font: 400 0.9375rem/1.6 var(--mono); letter-spacing: 0; color: var(--muted); padding-top: 1.25rem; }
 .interest-body > * { margin: 0 0 1.25rem; }
 .interest-body > :last-child { margin-bottom: 0.25rem; }
-/* Each open replays the boot sequence inside the panel */
-.interest details[open] .interest-body > * { animation: boot 400ms var(--ease-out) backwards; }
-.interest details[open] .interest-body > :nth-child(2) { animation-delay: calc(1 * var(--beat)); }
-.interest details[open] .interest-body > :nth-child(3) { animation-delay: calc(2 * var(--beat)); }
+@keyframes panel-reveal { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0); } }
+/* The line is the bottom edge of a full-height box sliding from above the panel to its bottom,
+   so it rides exactly on the clip edge */
+@keyframes scanline { from { transform: translateY(-100%); opacity: 1; } 80% { opacity: 1; } to { transform: none; opacity: 0; } }
+.interest-body { position: relative; }
+.interest details[open] .interest-body { animation: panel-reveal 420ms var(--ease-out); }
+.interest details[open] .interest-body::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0;
+  border-bottom: 2px solid var(--accent);
+  animation: scanline 420ms var(--ease-out);
+}
 
 .interest-facts { display: grid; grid-template-columns: max-content 1fr; gap: 0.5rem 1.5rem; }
 .interest-facts div { display: contents; }
@@ -982,7 +991,7 @@ a:hover { color: var(--accent); }
 
 /* ---------- Boot sequence: lines print in, top to bottom ---------- */
 @keyframes boot { from { opacity: 0; transform: translateY(0.75rem); } }
-@keyframes wipe { from { clip-path: inset(0 100% 0 0); } }
+@keyframes wipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0); } }
 @keyframes rule { from { transform: scaleX(0); } }
 @keyframes blink { 50% { opacity: 0; } }
 
