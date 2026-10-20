@@ -728,224 +728,64 @@ a:hover { color: var(--accent); }
 }
 .pk-pct > :nth-child(4) { animation-name: pk-eq-river; }
 
-/* Knight's tour: 64 hops by Warnsdorff's rule (always jump to the square with the fewest onward
-   moves), starting from b1. Hops are held frames (steps(1)) on one 11.55s clock. Each square lights up
-   (an inset shadow, which Safari animates reliably) when the knight lands and shows its move number once the knight leaves. Generated, not hand-edited. */
-.kt { --kt-trail: color-mix(in srgb, var(--accent) 22%, var(--surface)); position: relative; display: grid;
-  grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(8, 1fr); width: min(100%, 22rem); aspect-ratio: 1;
-  align-self: start; justify-self: start; border: 1px solid var(--line); }
-.kt-sq { display: grid; place-items: center; font-size: 0.6875rem; color: var(--muted); box-shadow: inset 0 0 0 10rem var(--kt-trail);
-  animation: 11.55s steps(1, end) infinite; }
+/* Three tactics from game positions, one after another on an 18s clock: a knight fork, a back-rank
+   mate and a pin. Each board runs on its own 6s beat with held frames (steps(1)): the piece moves,
+   its empty attacked squares get a dot, then the targets light up one by one. The base styles are the
+   final frame of the first board, so reduced motion shows the finished fork. */
+.kt-board { display: grid; grid-template-columns: auto minmax(0, 22rem); justify-content: center; gap: 0.5rem;
+  font-family: var(--mono); font-size: 0.6875rem; color: var(--muted); text-transform: uppercase; }
+.kt-ranks { display: grid; grid-template-rows: repeat(8, 1fr); place-items: center; padding-block: 2px; }
+.kt-files { grid-column: 2; display: grid; grid-template-columns: repeat(8, 1fr); justify-items: center; padding-inline: 2px; }
+/* The three boards share one cell; only one is visible at a time */
+.kt-stack { display: grid; }
+/* Hard ink frame, 1px grid lines between squares, hatched dark squares, flat offset shadow */
+.kt { grid-area: 1 / 1; position: relative; display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(8, 1fr);
+  gap: 1px; aspect-ratio: 1; background: var(--line); border: 2px solid var(--ink); box-shadow: 6px 6px 0 var(--ink);
+  animation: 18s steps(1, end) infinite; }
+.kt:not(.kt-1) { visibility: hidden; }
+.kt-1 { animation-name: kt-show-1; }
+.kt-2 { animation-name: kt-show-2; }
+.kt-3 { animation-name: kt-show-3; }
+@keyframes kt-show-1 { 0% { visibility: visible; } 33.333%, 100% { visibility: hidden; } }
+@keyframes kt-show-2 { 0% { visibility: hidden; } 33.333% { visibility: visible; } 66.667%, 100% { visibility: hidden; } }
+@keyframes kt-show-3 { 0% { visibility: hidden; } 66.667%, 100% { visibility: visible; } }
+.kt-sq { display: grid; place-items: center; color: var(--muted); background: var(--surface); }
 /* Checkerboard: dark squares are where (row + col) is odd */
-.kt-sq.d { background-color: color-mix(in srgb, var(--ink) 6%, transparent); }
-.kt-knight { position: absolute; top: 0; left: 0; width: 12.5%; aspect-ratio: 1; padding: 2.5% 2.25% 2%; opacity: 0;
-  animation: kt-knight 11.55s steps(1, end) infinite; }
-.kt-knight svg { display: block; width: 100%; height: 100%; }
-.kt-knight rect { fill: var(--ink); }
-@keyframes kt-knight {
-  0% { opacity: 1; transform: translate(100%, 700%); }
-  1.299% { opacity: 1; transform: translate(0%, 500%); }
-  2.597% { opacity: 1; transform: translate(100%, 300%); }
-  3.896% { opacity: 1; transform: translate(0%, 100%); }
-  5.195% { opacity: 1; transform: translate(200%, 0%); }
-  6.494% { opacity: 1; transform: translate(100%, 200%); }
-  7.792% { opacity: 1; transform: translate(0%, 0%); }
-  9.091% { opacity: 1; transform: translate(200%, 100%); }
-  10.39% { opacity: 1; transform: translate(0%, 200%); }
-  11.688% { opacity: 1; transform: translate(100%, 0%); }
-  12.987% { opacity: 1; transform: translate(300%, 100%); }
-  14.286% { opacity: 1; transform: translate(500%, 0%); }
-  15.584% { opacity: 1; transform: translate(700%, 100%); }
-  16.883% { opacity: 1; transform: translate(600%, 300%); }
-  18.182% { opacity: 1; transform: translate(700%, 500%); }
-  19.481% { opacity: 1; transform: translate(600%, 700%); }
-  20.779% { opacity: 1; transform: translate(400%, 600%); }
-  22.078% { opacity: 1; transform: translate(200%, 700%); }
-  23.377% { opacity: 1; transform: translate(0%, 600%); }
-  24.675% { opacity: 1; transform: translate(100%, 400%); }
-  25.974% { opacity: 1; transform: translate(200%, 600%); }
-  27.273% { opacity: 1; transform: translate(0%, 700%); }
-  28.571% { opacity: 1; transform: translate(100%, 500%); }
-  29.87% { opacity: 1; transform: translate(0%, 300%); }
-  31.169% { opacity: 1; transform: translate(100%, 100%); }
-  32.468% { opacity: 1; transform: translate(300%, 0%); }
-  33.766% { opacity: 1; transform: translate(200%, 200%); }
-  35.065% { opacity: 1; transform: translate(300%, 400%); }
-  36.364% { opacity: 1; transform: translate(400%, 200%); }
-  37.662% { opacity: 1; transform: translate(200%, 300%); }
-  38.961% { opacity: 1; transform: translate(0%, 400%); }
-  40.26% { opacity: 1; transform: translate(100%, 600%); }
-  41.558% { opacity: 1; transform: translate(300%, 700%); }
-  42.857% { opacity: 1; transform: translate(200%, 500%); }
-  44.156% { opacity: 1; transform: translate(300%, 300%); }
-  45.455% { opacity: 1; transform: translate(400%, 100%); }
-  46.753% { opacity: 1; transform: translate(600%, 0%); }
-  48.052% { opacity: 1; transform: translate(700%, 200%); }
-  49.351% { opacity: 1; transform: translate(500%, 100%); }
-  50.649% { opacity: 1; transform: translate(700%, 0%); }
-  51.948% { opacity: 1; transform: translate(600%, 200%); }
-  53.247% { opacity: 1; transform: translate(500%, 400%); }
-  54.545% { opacity: 1; transform: translate(300%, 500%); }
-  55.844% { opacity: 1; transform: translate(400%, 700%); }
-  57.143% { opacity: 1; transform: translate(600%, 600%); }
-  58.442% { opacity: 1; transform: translate(700%, 400%); }
-  59.74% { opacity: 1; transform: translate(500%, 500%); }
-  61.039% { opacity: 1; transform: translate(400%, 300%); }
-  62.338% { opacity: 1; transform: translate(200%, 400%); }
-  63.636% { opacity: 1; transform: translate(300%, 600%); }
-  64.935% { opacity: 1; transform: translate(500%, 700%); }
-  66.234% { opacity: 1; transform: translate(700%, 600%); }
-  67.532% { opacity: 1; transform: translate(600%, 400%); }
-  68.831% { opacity: 1; transform: translate(400%, 500%); }
-  70.13% { opacity: 1; transform: translate(500%, 300%); }
-  71.429% { opacity: 1; transform: translate(300%, 200%); }
-  72.727% { opacity: 1; transform: translate(400%, 0%); }
-  74.026% { opacity: 1; transform: translate(600%, 100%); }
-  75.325% { opacity: 1; transform: translate(700%, 300%); }
-  76.623% { opacity: 1; transform: translate(500%, 200%); }
-  77.922% { opacity: 1; transform: translate(400%, 400%); }
-  79.221% { opacity: 1; transform: translate(500%, 600%); }
-  80.519% { opacity: 1; transform: translate(700%, 700%); }
-  81.818% { opacity: 1; transform: translate(600%, 500%); }
-  84.416%, 100% { opacity: 0; transform: translate(600%, 500%); }
+.kt-sq.d { background: repeating-linear-gradient(45deg, var(--line) 0 2px, var(--surface) 2px 6px); }
+.kt-pc { width: 62%; aspect-ratio: 1; }
+.kt-pc svg, .kt-mv svg { display: block; width: 100%; height: 100%; }
+.kt-pc rect { fill: currentColor; }
+.kt-pc.w { color: var(--ink); }
+/* The moving piece. Its base transform is the square it lands on. */
+.kt-mv { position: absolute; top: 0; left: 0; width: 12.5%; aspect-ratio: 1; padding: 2.5% 2.25% 2%;
+  animation: 6s steps(1, end) infinite; }
+.kt-mv rect { fill: var(--ink); }
+.kt-1 .kt-mv { transform: translate(200%, 100%); animation-name: kt-mv-1; }
+@keyframes kt-mv-1 { 0% { transform: translate(300%, 300%); } 20%, 100% { transform: translate(200%, 100%); } }
+.kt-2 .kt-mv { transform: translate(300%, 0%); animation-name: kt-mv-2; }
+@keyframes kt-mv-2 { 0% { transform: translate(300%, 700%); } 20%, 100% { transform: translate(300%, 0%); } }
+.kt-3 .kt-mv { transform: translate(600%, 300%); animation-name: kt-mv-3; }
+@keyframes kt-mv-3 { 0% { transform: translate(200%, 700%); } 20%, 100% { transform: translate(600%, 300%); } }
+/* Reachable squares: a square dot, like a move hint */
+.kt-sq.r::after { content: ""; width: 22%; aspect-ratio: 1; background: var(--accent);
+  animation: kt-reach 6s steps(1, end) infinite; }
+@keyframes kt-reach {
+  0% { opacity: 0; }
+  26% { opacity: 1; }
+  92%, 100% { opacity: 0; }
 }
-@keyframes kt-7 { 0% { box-shadow: none; color: transparent; } 7.792% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 9.091% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(1) { animation-name: kt-7; }
-@keyframes kt-10 { 0% { box-shadow: none; color: transparent; } 11.688% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 12.987% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(2) { animation-name: kt-10; }
-@keyframes kt-5 { 0% { box-shadow: none; color: transparent; } 5.195% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 6.494% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(3) { animation-name: kt-5; }
-@keyframes kt-26 { 0% { box-shadow: none; color: transparent; } 32.468% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 33.766% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(4) { animation-name: kt-26; }
-@keyframes kt-57 { 0% { box-shadow: none; color: transparent; } 72.727% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 74.026% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(5) { animation-name: kt-57; }
-@keyframes kt-12 { 0% { box-shadow: none; color: transparent; } 14.286% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 15.584% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(6) { animation-name: kt-12; }
-@keyframes kt-37 { 0% { box-shadow: none; color: transparent; } 46.753% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 48.052% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(7) { animation-name: kt-37; }
-@keyframes kt-40 { 0% { box-shadow: none; color: transparent; } 50.649% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 51.948% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(8) { animation-name: kt-40; }
-@keyframes kt-4 { 0% { box-shadow: none; color: transparent; } 3.896% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 5.195% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(9) { animation-name: kt-4; }
-@keyframes kt-25 { 0% { box-shadow: none; color: transparent; } 31.169% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 32.468% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(10) { animation-name: kt-25; }
-@keyframes kt-8 { 0% { box-shadow: none; color: transparent; } 9.091% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 10.39% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(11) { animation-name: kt-8; }
-@keyframes kt-11 { 0% { box-shadow: none; color: transparent; } 12.987% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 14.286% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(12) { animation-name: kt-11; }
-@keyframes kt-36 { 0% { box-shadow: none; color: transparent; } 45.455% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 46.753% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(13) { animation-name: kt-36; }
-@keyframes kt-39 { 0% { box-shadow: none; color: transparent; } 49.351% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 50.649% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(14) { animation-name: kt-39; }
-@keyframes kt-58 { 0% { box-shadow: none; color: transparent; } 74.026% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 75.325% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(15) { animation-name: kt-58; }
-@keyframes kt-13 { 0% { box-shadow: none; color: transparent; } 15.584% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 16.883% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(16) { animation-name: kt-13; }
-@keyframes kt-9 { 0% { box-shadow: none; color: transparent; } 10.39% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 11.688% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(17) { animation-name: kt-9; }
-@keyframes kt-6 { 0% { box-shadow: none; color: transparent; } 6.494% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 7.792% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(18) { animation-name: kt-6; }
-@keyframes kt-27 { 0% { box-shadow: none; color: transparent; } 33.766% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 35.065% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(19) { animation-name: kt-27; }
-@keyframes kt-56 { 0% { box-shadow: none; color: transparent; } 71.429% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 72.727% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(20) { animation-name: kt-56; }
-@keyframes kt-29 { 0% { box-shadow: none; color: transparent; } 36.364% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 37.662% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(21) { animation-name: kt-29; }
-@keyframes kt-60 { 0% { box-shadow: none; color: transparent; } 76.623% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 77.922% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(22) { animation-name: kt-60; }
-@keyframes kt-41 { 0% { box-shadow: none; color: transparent; } 51.948% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 53.247% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(23) { animation-name: kt-41; }
-@keyframes kt-38 { 0% { box-shadow: none; color: transparent; } 48.052% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 49.351% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(24) { animation-name: kt-38; }
-@keyframes kt-24 { 0% { box-shadow: none; color: transparent; } 29.87% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 31.169% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(25) { animation-name: kt-24; }
-@keyframes kt-3 { 0% { box-shadow: none; color: transparent; } 2.597% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 3.896% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(26) { animation-name: kt-3; }
-@keyframes kt-30 { 0% { box-shadow: none; color: transparent; } 37.662% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 38.961% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(27) { animation-name: kt-30; }
-@keyframes kt-35 { 0% { box-shadow: none; color: transparent; } 44.156% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 45.455% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(28) { animation-name: kt-35; }
-@keyframes kt-48 { 0% { box-shadow: none; color: transparent; } 61.039% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 62.338% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(29) { animation-name: kt-48; }
-@keyframes kt-55 { 0% { box-shadow: none; color: transparent; } 70.13% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 71.429% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(30) { animation-name: kt-55; }
-@keyframes kt-14 { 0% { box-shadow: none; color: transparent; } 16.883% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 18.182% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(31) { animation-name: kt-14; }
-@keyframes kt-59 { 0% { box-shadow: none; color: transparent; } 75.325% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 76.623% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(32) { animation-name: kt-59; }
-@keyframes kt-31 { 0% { box-shadow: none; color: transparent; } 38.961% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 40.26% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(33) { animation-name: kt-31; }
-@keyframes kt-20 { 0% { box-shadow: none; color: transparent; } 24.675% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 25.974% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(34) { animation-name: kt-20; }
-@keyframes kt-49 { 0% { box-shadow: none; color: transparent; } 62.338% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 63.636% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(35) { animation-name: kt-49; }
-@keyframes kt-28 { 0% { box-shadow: none; color: transparent; } 35.065% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 36.364% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(36) { animation-name: kt-28; }
-@keyframes kt-61 { 0% { box-shadow: none; color: transparent; } 77.922% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 79.221% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(37) { animation-name: kt-61; }
-@keyframes kt-42 { 0% { box-shadow: none; color: transparent; } 53.247% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 54.545% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(38) { animation-name: kt-42; }
-@keyframes kt-53 { 0% { box-shadow: none; color: transparent; } 67.532% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 68.831% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(39) { animation-name: kt-53; }
-@keyframes kt-46 { 0% { box-shadow: none; color: transparent; } 58.442% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 59.74% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(40) { animation-name: kt-46; }
-@keyframes kt-2 { 0% { box-shadow: none; color: transparent; } 1.299% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 2.597% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(41) { animation-name: kt-2; }
-@keyframes kt-23 { 0% { box-shadow: none; color: transparent; } 28.571% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 29.87% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(42) { animation-name: kt-23; }
-@keyframes kt-34 { 0% { box-shadow: none; color: transparent; } 42.857% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 44.156% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(43) { animation-name: kt-34; }
-@keyframes kt-43 { 0% { box-shadow: none; color: transparent; } 54.545% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 55.844% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(44) { animation-name: kt-43; }
-@keyframes kt-54 { 0% { box-shadow: none; color: transparent; } 68.831% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 70.13% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(45) { animation-name: kt-54; }
-@keyframes kt-47 { 0% { box-shadow: none; color: transparent; } 59.74% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 61.039% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(46) { animation-name: kt-47; }
-@keyframes kt-64 { 0% { box-shadow: none; color: transparent; } 81.818% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 84.416% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(47) { animation-name: kt-64; }
-@keyframes kt-15 { 0% { box-shadow: none; color: transparent; } 18.182% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 19.481% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(48) { animation-name: kt-15; }
-@keyframes kt-19 { 0% { box-shadow: none; color: transparent; } 23.377% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 24.675% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(49) { animation-name: kt-19; }
-@keyframes kt-32 { 0% { box-shadow: none; color: transparent; } 40.26% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 41.558% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(50) { animation-name: kt-32; }
-@keyframes kt-21 { 0% { box-shadow: none; color: transparent; } 25.974% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 27.273% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(51) { animation-name: kt-21; }
-@keyframes kt-50 { 0% { box-shadow: none; color: transparent; } 63.636% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 64.935% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(52) { animation-name: kt-50; }
-@keyframes kt-17 { 0% { box-shadow: none; color: transparent; } 20.779% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 22.078% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(53) { animation-name: kt-17; }
-@keyframes kt-62 { 0% { box-shadow: none; color: transparent; } 79.221% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 80.519% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(54) { animation-name: kt-62; }
-@keyframes kt-45 { 0% { box-shadow: none; color: transparent; } 57.143% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 58.442% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(55) { animation-name: kt-45; }
-@keyframes kt-52 { 0% { box-shadow: none; color: transparent; } 66.234% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 67.532% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(56) { animation-name: kt-52; }
-@keyframes kt-22 { 0% { box-shadow: none; color: transparent; } 27.273% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 28.571% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(57) { animation-name: kt-22; }
-@keyframes kt-1 { 0% { box-shadow: none; color: transparent; } 0% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 1.299% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(58) { animation-name: kt-1; }
-@keyframes kt-18 { 0% { box-shadow: none; color: transparent; } 22.078% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 23.377% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(59) { animation-name: kt-18; }
-@keyframes kt-33 { 0% { box-shadow: none; color: transparent; } 41.558% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 42.857% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(60) { animation-name: kt-33; }
-@keyframes kt-44 { 0% { box-shadow: none; color: transparent; } 55.844% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 57.143% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(61) { animation-name: kt-44; }
-@keyframes kt-51 { 0% { box-shadow: none; color: transparent; } 64.935% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 66.234% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(62) { animation-name: kt-51; }
-@keyframes kt-16 { 0% { box-shadow: none; color: transparent; } 19.481% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 20.779% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(63) { animation-name: kt-16; }
-@keyframes kt-63 { 0% { box-shadow: none; color: transparent; } 80.519% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: transparent; } 81.818% { box-shadow: inset 0 0 0 10rem var(--kt-trail); color: var(--muted); } 98.268%, 100% { box-shadow: none; color: transparent; } }
-.kt-sq:nth-child(64) { animation-name: kt-63; }
+/* Forked pieces (t1 king, t2 queen, t3 rook, t4 bishop): solid red square, piece cut out in the page colour */
+.kt-sq.t1, .kt-sq.t2, .kt-sq.t3, .kt-sq.t4 { color: var(--bg); box-shadow: inset 0 0 0 10rem var(--accent);
+  animation: 6s steps(1, end) infinite; }
+.kt-sq.t1 { animation-name: kt-hit-1; }
+.kt-sq.t2 { animation-name: kt-hit-2; }
+.kt-sq.t3 { animation-name: kt-hit-3; }
+.kt-sq.t4 { animation-name: kt-hit-4; }
+@keyframes kt-hit-1 { 0% { color: var(--muted); box-shadow: none; } 34% { color: var(--bg); box-shadow: inset 0 0 0 10rem var(--accent); } 92%, 100% { color: var(--muted); box-shadow: none; } }
+@keyframes kt-hit-2 { 0% { color: var(--muted); box-shadow: none; } 41% { color: var(--bg); box-shadow: inset 0 0 0 10rem var(--accent); } 92%, 100% { color: var(--muted); box-shadow: none; } }
+@keyframes kt-hit-3 { 0% { color: var(--muted); box-shadow: none; } 48% { color: var(--bg); box-shadow: inset 0 0 0 10rem var(--accent); } 92%, 100% { color: var(--muted); box-shadow: none; } }
+@keyframes kt-hit-4 { 0% { color: var(--muted); box-shadow: none; } 55% { color: var(--bg); box-shadow: inset 0 0 0 10rem var(--accent); } 92%, 100% { color: var(--muted); box-shadow: none; } }
 
-/* Board beside the maths; stacks on narrow screens */
-.kt-layout { display: grid; gap: 1.5rem; }
-@media (min-width: 40rem) { .kt-layout { grid-template-columns: 18rem 1fr; align-items: center; } .kt-layout .kt { align-self: center; } }
-.kt-math { margin: 0; display: grid; gap: 1.25rem; }
-.kt-math dt { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.25rem; }
-.kt-math dd { margin: 0; font-size: 0.8125rem; line-height: 1.5; }
-.kt-math .nowrap { white-space: nowrap; }
-.kt-eq { display: block; color: var(--ink); font-size: 0.875rem; margin-bottom: 0.25rem; }
 
 /* ---------- Project page ---------- */
 .page-head { padding-block: clamp(2rem, 8vw, 5rem) 2.5rem; }
