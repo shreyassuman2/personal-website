@@ -458,7 +458,7 @@ a:hover { color: var(--accent); }
 .pk-hand { grid-area: 1 / 1; display: grid; gap: 1rem; animation: 50s steps(1, end) infinite; }
 .pk-hand:not(:first-child) { visibility: hidden; }
 .pk-street { grid-column: 1 / 4; display: grid; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); }
-.pk-col { justify-self: end; font-size: 0.6875rem; letter-spacing: 0.08em; }
+.pk-col { justify-self: end; letter-spacing: 0.08em; text-transform: uppercase; }
 .pk-street > *, .pk-pct > * { grid-area: 1 / 1; }
 .pk-row { display: grid; grid-template-columns: 4.25rem auto 1fr 3.5rem; align-items: center; gap: 0.75rem; }
 .pk-who { letter-spacing: 0.08em; text-transform: uppercase; }
