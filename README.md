@@ -2,7 +2,7 @@
 
 My personal site: projects, about me, and links.
 
-Built with [Hugo](https://gohugo.io) (v0.168.0) and hosted on Cloudflare Pages. No JavaScript, self-hosted fonts, strict security headers in `static/_headers`.
+Built with [Hugo](https://gohugo.io) (v0.168.0) and hosted on Cloudflare Pages. 
 
 ```bash
 hugo server   # preview at localhost:1313
