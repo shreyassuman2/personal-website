@@ -1,0 +1,8 @@
+baseURL = 'https://shreyassuman.com/'
+locale = 'en-us'
+title = 'Shreyas Suman'
+enableRobotsTXT = true
+
+[markup.highlight]
+  # Emit CSS classes instead of inline styles so the strict CSP (style-src 'self') holds
+  noClasses = false
