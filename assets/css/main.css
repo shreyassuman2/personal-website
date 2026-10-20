@@ -23,6 +23,9 @@
   --max: 64rem;
   --radius: 0;
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  /* Motion: fast and decisive, no bounce. Hard stop at the end, never a drift. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --beat: 60ms;   /* stagger between lines in the boot sequence */
 }
 
 /* ---------- Base ---------- */
@@ -112,7 +115,7 @@ a:hover { color: var(--accent); }
   text-decoration: none;
   padding: 0.625rem 0.875rem;
   border: 1px solid var(--line);
-  transition: border-color 0.2s var(--ease), color 0.2s var(--ease);
+  transition: border-color 160ms ease, color 160ms ease;
 }
 .hero-links a:hover, .project-links a:hover { border-color: var(--accent); }
 
@@ -139,9 +142,11 @@ a:hover { color: var(--accent); }
   object-fit: cover;
   object-position: top left;
   filter: grayscale(0.7) brightness(0.85);
-  transition: transform 0.6s var(--ease), filter 0.3s var(--ease);
+  transition: transform 300ms var(--ease-out), filter 200ms ease;
 }
-.card a:hover .card-media img { transform: scale(1.03); filter: none; }
+@media (hover: hover) and (pointer: fine) {
+  .card a:hover .card-media img { transform: scale(1.03); filter: none; }
+}
 .card-body { padding-top: 1.25rem; }
 .card-num { font: 0.75rem/1 var(--mono); color: var(--accent); }
 .card h3 {
@@ -216,6 +221,50 @@ a:hover { color: var(--accent); }
 .next .label::after { display: none; }
 .next-title { font: 500 clamp(1.75rem, 5vw, 3rem)/1.05 var(--mono); letter-spacing: -0.03em; transition: color 0.2s var(--ease); }
 .next a:hover .next-title { color: var(--accent); }
+
+/* ---------- Boot sequence: lines print in, top to bottom ---------- */
+@keyframes boot { from { opacity: 0; transform: translateY(0.75rem); } }
+@keyframes wipe { from { clip-path: inset(0 100% 0 0); } }
+@keyframes rule { from { transform: scaleX(0); } }
+@keyframes blink { 50% { opacity: 0; } }
+
+.hero > *, .page-head > * { animation: boot 400ms var(--ease-out) backwards; }
+.hero > :nth-child(2), .page-head > :nth-child(2) { animation-delay: calc(1 * var(--beat)); }
+.hero > :nth-child(3), .page-head > :nth-child(3) { animation-delay: calc(3 * var(--beat)); }
+.hero > :nth-child(4), .page-head > :nth-child(4) { animation-delay: calc(4 * var(--beat)); }
+.hero > :nth-child(5), .page-head > :nth-child(5) { animation-delay: calc(5 * var(--beat)); }
+/* The big title wipes on left to right, like a line being written */
+.hero .display, .page-head .display { animation: wipe 600ms var(--ease-out) calc(1 * var(--beat)) backwards; }
+/* Home: the name slides in at ~13fps, brightening from black to white as it lands.
+   Each keyframe is held for one frame (steps(1)), and the gaps between keyframes shrink,
+   so it decelerates like an ease-out, but in jumps. */
+@keyframes slide-frames {
+  0%   { transform: translateX(-40%);  color: var(--bg); }
+  11%  { transform: translateX(-24%);  color: color-mix(in srgb, var(--ink) 12%, var(--bg)); }
+  22%  { transform: translateX(-14%);  color: color-mix(in srgb, var(--ink) 25%, var(--bg)); }
+  33%  { transform: translateX(-8%);   color: color-mix(in srgb, var(--ink) 40%, var(--bg)); }
+  44%  { transform: translateX(-4%);   color: color-mix(in srgb, var(--ink) 55%, var(--bg)); }
+  56%  { transform: translateX(-1.5%); color: color-mix(in srgb, var(--ink) 70%, var(--bg)); }
+  67%  { transform: none; color: color-mix(in srgb, var(--ink) 82%, var(--bg)); }
+  78%  { transform: none; color: color-mix(in srgb, var(--ink) 92%, var(--bg)); }
+  89%, 100% { transform: none; color: var(--ink); }
+}
+.hero .display { animation: slide-frames 700ms steps(1, end) calc(1 * var(--beat)) backwards; }
+/* Everything below the header lands last */
+main > section + section, .facts, .cover { animation: boot 400ms var(--ease-out) calc(6 * var(--beat)) backwards; }
+.label::after { transform-origin: left; animation: rule 700ms var(--ease-out) calc(8 * var(--beat)) backwards; }
+
+/* Block cursor after terminal prompts */
+.eyebrow:has(.prompt)::after {
+  content: "";
+  display: inline-block;
+  width: 0.6em;
+  height: 1.1em;
+  margin-left: 0.35em;
+  vertical-align: -0.2em;
+  background: var(--ink);
+  animation: blink 1s steps(1) infinite;
+}
 
 /* ---------- Motion preferences ---------- */
 @media (prefers-reduced-motion: reduce) {
