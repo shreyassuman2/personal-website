@@ -1,0 +1,29 @@
+{{/* Poker hand runout with live equity. Animated in main.css (.pk-*). */}}
+<div class="pk" role="img" aria-label="A poker hand: ace-king of spades against pocket queens. Win odds go 46%, 54% after a flush-draw flop, 34% after the turn, and the ace on the river wins it.">
+  <div class="pk-street"><span>Preflop</span><span>Flop</span><span>Turn</span><span>River</span></div>
+  <div class="pk-row">
+    <span class="pk-who">You</span>
+    <div class="pk-cards">
+      <span class="pk-card pk-hole pk-h1">A♠<i class="pk-back"></i></span>
+      <span class="pk-card pk-hole pk-h2">K♠<i class="pk-back"></i></span>
+    </div>
+    <span class="pk-win">Wins</span>
+    <span class="pk-pct"><span>46%</span><span>54%</span><span>34%</span><span>100%</span></span>
+  </div>
+  <div class="pk-row">
+    <span class="pk-who">Opp</span>
+    <div class="pk-cards">
+      <span class="pk-card red pk-hole pk-h3">Q♥<i class="pk-back"></i></span>
+      <span class="pk-card red pk-hole pk-h4">Q♦<i class="pk-back"></i></span>
+    </div>
+    <span class="pk-pct"><span>54%</span><span>46%</span><span>66%</span><span>0%</span></span>
+  </div>
+  <div class="pk-board">
+    <span class="pk-slot"><span class="pk-card">J♠</span></span>
+    <span class="pk-slot"><span class="pk-card red">7♦</span></span>
+    <span class="pk-slot"><span class="pk-card">2♠</span></span>
+    <span class="pk-slot"><span class="pk-card">3♣</span></span>
+    <span class="pk-slot"><span class="pk-card red">A♥</span></span>
+  </div>
+  <div class="pk-bar"><span></span></div>
+</div>

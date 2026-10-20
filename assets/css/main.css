@@ -173,13 +173,547 @@ a:hover { color: var(--accent); }
 /* ---------- About ---------- */
 .about-intro { color: var(--ink); }
 .interests { list-style: none; padding: 0; margin: 0; display: grid; gap: 0; max-width: 38rem; }
-.interests li {
+.interests > li {
   font: 500 1.375rem/1.2 var(--mono);
   letter-spacing: -0.02em;
   padding: 1rem 0;
   border-bottom: 1px solid var(--line);
 }
-.interests li::before { content: "> "; color: var(--accent); }
+.interests > li::before { content: "> "; color: var(--accent); }
+
+/* Expandable interests: native <details>, the prompt and [+]/[-] live on the summary */
+.interests { interpolate-size: allow-keywords; }
+.interest::before { display: none; }
+.interest summary { display: flex; cursor: pointer; list-style: none; }
+.interest summary::-webkit-details-marker { display: none; }
+.interest summary::before { content: "> "; white-space: pre; color: var(--accent); }
+.interest summary::after { content: "[+]"; margin-left: auto; padding-left: 1rem; font-weight: 400; color: var(--muted); }
+.interest details[open] summary::after { content: "[-]"; color: var(--accent); }
+@media (hover: hover) and (pointer: fine) {
+  .interest summary { transition: color 160ms ease; }
+  .interest summary:hover { color: var(--accent); }
+}
+/* Panel height opens smoothly where ::details-content is supported; elsewhere it opens instantly */
+.interest details::details-content {
+  block-size: 0;
+  overflow: hidden;
+  transition: block-size 300ms var(--ease-out), content-visibility 300ms allow-discrete;
+}
+.interest details[open]::details-content { block-size: auto; }
+
+.interest-body { font: 400 0.9375rem/1.6 var(--mono); letter-spacing: 0; color: var(--muted); padding-top: 1.25rem; }
+.interest-body > * { margin: 0 0 1.25rem; }
+.interest-body > :last-child { margin-bottom: 0.25rem; }
+/* Each open replays the boot sequence inside the panel */
+.interest details[open] .interest-body > * { animation: boot 400ms var(--ease-out) backwards; }
+.interest details[open] .interest-body > :nth-child(2) { animation-delay: calc(1 * var(--beat)); }
+.interest details[open] .interest-body > :nth-child(3) { animation-delay: calc(2 * var(--beat)); }
+
+.interest-facts { display: grid; grid-template-columns: max-content 1fr; gap: 0.5rem 1.5rem; }
+.interest-facts div { display: contents; }
+.interest-facts dt { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.6rem; }
+.interest-facts dd { margin: 0; color: var(--ink); }
+.wip { font-size: 0.6875rem; letter-spacing: 0.08em; color: var(--accent); border: 1px solid var(--accent); padding: 0.1em 0.4em; margin-left: 0.5em; vertical-align: 0.1em; }
+
+.process { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.25rem 1.5rem; }
+.process span { color: var(--accent); }
+
+/* Diagram box shared by the interest panels */
+.interest-fig { border: 1px solid var(--line); background: var(--surface); padding: 1rem; }
+.interest-fig figcaption { font-size: 0.8125rem; margin-top: 0.75rem; }
+.interest-fig svg { display: block; width: 100%; height: auto; }
+
+/* Granular diagram: grain windows hop across the source in held frames; a playhead plays them back out */
+.gr-label { font: 500 11px var(--mono); letter-spacing: 0.08em; fill: var(--muted); }
+.gr-wave rect { fill: var(--muted); opacity: 0.45; }
+.gr-grains rect { fill: color-mix(in srgb, var(--accent) 15%, transparent); stroke: var(--accent); stroke-width: 1.5; }
+.gr-grains rect:nth-child(1) { transform: translateX(52px); animation: grain-a 2.4s steps(1, end) infinite; }
+.gr-grains rect:nth-child(2) { transform: translateX(380px); animation: grain-b 2.4s steps(1, end) infinite; }
+.gr-grains rect:nth-child(3) { transform: translateX(200px); animation: grain-c 2.4s steps(1, end) infinite; }
+@keyframes grain-a { 0% { transform: translateX(52px); } 25% { transform: translateX(300px); } 50% { transform: translateX(140px); } 75%, 100% { transform: translateX(460px); } }
+@keyframes grain-b { 0% { transform: translateX(380px); } 25% { transform: translateX(90px); } 50% { transform: translateX(520px); } 75%, 100% { transform: translateX(236px); } }
+@keyframes grain-c { 0% { transform: translateX(200px); } 25% { transform: translateX(470px); } 50% { transform: translateX(60px); } 75%, 100% { transform: translateX(340px); } }
+.gr-base { stroke: var(--line); }
+.gr-head { stroke: var(--ink); animation: playhead 2.4s linear infinite; }
+@keyframes playhead { to { transform: translateX(552px); } }
+/* Each output grain lights up as the playhead reaches it (delay = its x position along the 2.4s sweep) */
+.gr-out polyline { fill: none; stroke: var(--accent); stroke-width: 1.5; opacity: 0.2; animation: grain-pop 2.4s linear infinite backwards; }
+@keyframes grain-pop { 0% { opacity: 1; } 30%, 100% { opacity: 0.2; } }
+.gr-out polyline:nth-child(1) { animation-delay: 0.07s; }
+.gr-out polyline:nth-child(2) { animation-delay: 0.26s; }
+.gr-out polyline:nth-child(3) { animation-delay: 0.41s; }
+.gr-out polyline:nth-child(4) { animation-delay: 0.63s; }
+.gr-out polyline:nth-child(5) { animation-delay: 0.82s; }
+.gr-out polyline:nth-child(6) { animation-delay: 1.07s; }
+.gr-out polyline:nth-child(7) { animation-delay: 1.24s; }
+.gr-out polyline:nth-child(8) { animation-delay: 1.48s; }
+.gr-out polyline:nth-child(9) { animation-delay: 1.68s; }
+.gr-out polyline:nth-child(10) { animation-delay: 1.9s; }
+.gr-out polyline:nth-child(11) { animation-delay: 2.07s; }
+.gr-out polyline:nth-child(12) { animation-delay: 2.25s; }
+
+/* Skate diagram: a boxy skater kickflips at ~10fps. Every part shares the same 2s clock and
+   keyframe percentages, and each keyframe is held for its frame (steps(1)). */
+.sk-legs, .sk-board, .sk-shadow { transform-box: fill-box; }
+.sk-legs { transform-origin: bottom; animation: sk-legs 2s steps(1, end) infinite; }
+.sk-upper { animation: sk-upper 2s steps(1, end) infinite; }
+.sk-board { transform-origin: center; animation: sk-board 2s steps(1, end) infinite; }
+.sk-shadow { transform-origin: center; animation: sk-shadow 2s steps(1, end) infinite; }
+.sk-body rect { fill: var(--ink); }
+.sk-grip { fill: var(--ink); }
+.sk-graphic { fill: var(--accent); }
+.sk-wheels rect { fill: var(--muted); }
+.sk-shadow { fill: var(--line); }
+.sk-ground { stroke: var(--muted); stroke-width: 0.75; stroke-dasharray: 8 12; animation: sk-ground 0.4s steps(4, end) infinite; }
+@keyframes sk-ground { to { stroke-dashoffset: 20; } }
+@keyframes sk-legs {
+  0% { transform: translateY(0px) scaleY(1); }
+  30% { transform: translateY(0px) scaleY(0.6); }
+  35% { transform: translateY(-6px) scaleY(0.8); }
+  40% { transform: translateY(-20px) scaleY(0.9); }
+  45% { transform: translateY(-30px) scaleY(0.7); }
+  50% { transform: translateY(-34px) scaleY(0.65); }
+  55% { transform: translateY(-32px) scaleY(0.7); }
+  60% { transform: translateY(-18px) scaleY(0.85); }
+  65% { transform: translateY(0px) scaleY(0.6); }
+  70% { transform: translateY(0px) scaleY(0.85); }
+  75%, 100% { transform: translateY(0px) scaleY(1); }
+}
+@keyframes sk-upper {
+  0% { transform: translateY(0px); }
+  30% { transform: translateY(9.6px); }
+  35% { transform: translateY(-1.2px); }
+  40% { transform: translateY(-17.6px); }
+  45% { transform: translateY(-22.8px); }
+  50% { transform: translateY(-25.6px); }
+  55% { transform: translateY(-24.8px); }
+  60% { transform: translateY(-14.4px); }
+  65% { transform: translateY(9.6px); }
+  70% { transform: translateY(3.6px); }
+  75%, 100% { transform: translateY(0px); }
+}
+@keyframes sk-board {
+  0% { transform: translateY(0px) rotate(0deg) scaleY(1); }
+  30% { transform: translateY(0px) rotate(0deg) scaleY(1); }
+  35% { transform: translateY(-4px) rotate(-18deg) scaleY(1); }
+  40% { transform: translateY(-16px) rotate(-8deg) scaleY(0.35); }
+  45% { transform: translateY(-24px) rotate(0deg) scaleY(-1); }
+  50% { transform: translateY(-28px) rotate(0deg) scaleY(-0.35); }
+  55% { transform: translateY(-32px) rotate(0deg) scaleY(1); }
+  60% { transform: translateY(-18px) rotate(0deg) scaleY(1); }
+  65% { transform: translateY(0px) rotate(0deg) scaleY(1); }
+  70% { transform: translateY(0px) rotate(0deg) scaleY(1); }
+  75%, 100% { transform: translateY(0px) rotate(0deg) scaleY(1); }
+}
+@keyframes sk-shadow {
+  0% { transform: scaleX(1); }
+  30% { transform: scaleX(1); }
+  35% { transform: scaleX(0.93); }
+  40% { transform: scaleX(0.7); }
+  45% { transform: scaleX(0.55); }
+  50% { transform: scaleX(0.47); }
+  55% { transform: scaleX(0.4); }
+  60% { transform: scaleX(0.66); }
+  65% { transform: scaleX(1); }
+  70% { transform: scaleX(1); }
+  75%, 100% { transform: scaleX(1); }
+}
+
+/* Poker runout: AsKs vs QhQd, J7-2 flop (flush draw), 3 turn, A river. Equities are exact enumerations
+   (preflop by simulation). One 10s clock; every keyframe is held for its frame (steps(1)). */
+.pk { display: grid; gap: 1rem; font-size: 0.8125rem; }
+.pk-street { display: grid; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); }
+.pk-street > *, .pk-pct > * { grid-area: 1 / 1; }
+.pk-row { display: grid; grid-template-columns: 2.5rem auto 1fr 3.5rem; align-items: center; gap: 1rem; }
+.pk-who { letter-spacing: 0.08em; text-transform: uppercase; }
+.pk-cards { display: flex; gap: 0.375rem; }
+.pk-pct { grid-column: 4; display: grid; justify-items: end; font-size: 1.125rem; color: var(--ink); }
+.pk-win { grid-column: 3; justify-self: end; color: var(--accent); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.pk-board { display: flex; gap: 0.375rem; margin-left: 3.5rem; }
+.pk-slot { position: relative; width: 2.5rem; aspect-ratio: 5 / 7; border: 1px dashed var(--line); }
+.pk-card {
+  position: relative; display: grid; place-items: center; width: 2.5rem; aspect-ratio: 5 / 7;
+  background: var(--bg); border: 1px solid var(--muted); color: var(--ink); font-size: 1rem; line-height: 1;
+}
+.pk-slot .pk-card { position: absolute; inset: -1px; width: auto; }
+.pk-card.red { color: var(--accent); }
+.pk-back {
+  position: absolute; inset: 0; opacity: 0;
+  background: repeating-linear-gradient(45deg, var(--line) 0 2px, var(--surface) 2px 6px);
+}
+.pk-bar { display: flex; height: 0.5rem; background: var(--line); margin-left: 3.5rem; }
+.pk-bar span { flex: 1; background: var(--accent); transform-origin: left; }
+.pk-hole, .pk-back, .pk-slot .pk-card, .pk-street > *, .pk-pct > *, .pk-win, .pk-bar span {
+  animation-duration: 10s; animation-timing-function: steps(1, end); animation-iteration-count: infinite;
+}
+/* Without motion everything rests on the river: the base styles below are the final frame */
+.pk-street > :not(:last-child), .pk-pct > :not(:last-child) { opacity: 0; }
+@keyframes pk-hole-1 {
+  0% { opacity: 0; transform: none; }
+  0% { opacity: 0.4; transform: translateY(-0.5rem); }
+  0.8% { opacity: 1; transform: none; }
+  8% { transform: scaleX(0.5); }
+  8.8% { transform: scaleX(0.08); }
+  9.6% { transform: scaleX(0.5); }
+  10.4% { transform: none; }
+  94%, 100% { opacity: 0; transform: none; }
+}
+@keyframes pk-hole-2 {
+  0% { opacity: 0; transform: none; }
+  1.6% { opacity: 0.4; transform: translateY(-0.5rem); }
+  2.4% { opacity: 1; transform: none; }
+  8% { transform: scaleX(0.5); }
+  8.8% { transform: scaleX(0.08); }
+  9.6% { transform: scaleX(0.5); }
+  10.4% { transform: none; }
+  94%, 100% { opacity: 0; transform: none; }
+}
+@keyframes pk-hole-3 {
+  0% { opacity: 0; transform: none; }
+  3.2% { opacity: 0.4; transform: translateY(-0.5rem); }
+  4% { opacity: 1; transform: none; }
+  8% { transform: scaleX(0.5); }
+  8.8% { transform: scaleX(0.08); }
+  9.6% { transform: scaleX(0.5); }
+  10.4% { transform: none; }
+  94%, 100% { opacity: 0; transform: none; }
+}
+@keyframes pk-hole-4 {
+  0% { opacity: 0; transform: none; }
+  4.8% { opacity: 0.4; transform: translateY(-0.5rem); }
+  5.6% { opacity: 1; transform: none; }
+  8% { transform: scaleX(0.5); }
+  8.8% { transform: scaleX(0.08); }
+  9.6% { transform: scaleX(0.5); }
+  10.4% { transform: none; }
+  94%, 100% { opacity: 0; transform: none; }
+}
+@keyframes pk-back {
+  0% { opacity: 1; }
+  9.6% { opacity: 0; }
+  94%, 100% { opacity: 1; }
+}
+.pk-back { animation-name: pk-back; }
+.pk-h1 { animation-name: pk-hole-1; }
+.pk-h2 { animation-name: pk-hole-2; }
+.pk-h3 { animation-name: pk-hole-3; }
+.pk-h4 { animation-name: pk-hole-4; }
+@keyframes pk-deal-1 {
+  0% { opacity: 0; transform: none; }
+  28% { opacity: 0.3; transform: translateY(-0.5rem); }
+  28.8% { opacity: 0.7; transform: translateY(-0.2rem); }
+  29.6% { opacity: 1; transform: none; }
+  94%, 100% { opacity: 0; transform: none; }
+}
+.pk-slot:nth-child(1) .pk-card { animation-name: pk-deal-1; }
+@keyframes pk-deal-2 {
+  0% { opacity: 0; transform: none; }
+  30% { opacity: 0.3; transform: translateY(-0.5rem); }
+  30.8% { opacity: 0.7; transform: translateY(-0.2rem); }
+  31.6% { opacity: 1; transform: none; }
+  94%, 100% { opacity: 0; transform: none; }
+}
+.pk-slot:nth-child(2) .pk-card { animation-name: pk-deal-2; }
+@keyframes pk-deal-3 {
+  0% { opacity: 0; transform: none; }
+  32% { opacity: 0.3; transform: translateY(-0.5rem); }
+  32.8% { opacity: 0.7; transform: translateY(-0.2rem); }
+  33.6% { opacity: 1; transform: none; }
+  94%, 100% { opacity: 0; transform: none; }
+}
+.pk-slot:nth-child(3) .pk-card { animation-name: pk-deal-3; }
+@keyframes pk-deal-4 {
+  0% { opacity: 0; transform: none; }
+  54% { opacity: 0.3; transform: translateY(-0.5rem); }
+  54.8% { opacity: 0.7; transform: translateY(-0.2rem); }
+  55.6% { opacity: 1; transform: none; }
+  94%, 100% { opacity: 0; transform: none; }
+}
+.pk-slot:nth-child(4) .pk-card { animation-name: pk-deal-4; }
+@keyframes pk-deal-5 {
+  0% { opacity: 0; transform: none; }
+  74% { opacity: 0.3; transform: translateY(-0.5rem); }
+  74.8% { opacity: 0.7; transform: translateY(-0.2rem); }
+  75.6% { opacity: 1; transform: none; }
+  94%, 100% { opacity: 0; transform: none; }
+}
+.pk-slot:nth-child(5) .pk-card { animation-name: pk-deal-5; }
+@keyframes pk-st-pre {
+  0% { opacity: 0; transform: none; }
+  12% { opacity: 1; transform: none; }
+  28%, 100% { opacity: 0; transform: none; }
+}
+.pk-street > :nth-child(1) { animation-name: pk-st-pre; }
+@keyframes pk-eq-pre {
+  0% { opacity: 0; transform: none; }
+  12% { opacity: 1; transform: none; }
+  36%, 100% { opacity: 0; transform: none; }
+}
+.pk-pct > :nth-child(1) { animation-name: pk-eq-pre; }
+@keyframes pk-st-flop {
+  0% { opacity: 0; transform: none; }
+  28% { opacity: 1; transform: none; }
+  54%, 100% { opacity: 0; transform: none; }
+}
+.pk-street > :nth-child(2) { animation-name: pk-st-flop; }
+@keyframes pk-eq-flop {
+  0% { opacity: 0; transform: none; }
+  36% { opacity: 1; transform: none; }
+  59%, 100% { opacity: 0; transform: none; }
+}
+.pk-pct > :nth-child(2) { animation-name: pk-eq-flop; }
+@keyframes pk-st-turn {
+  0% { opacity: 0; transform: none; }
+  54% { opacity: 1; transform: none; }
+  74%, 100% { opacity: 0; transform: none; }
+}
+.pk-street > :nth-child(3) { animation-name: pk-st-turn; }
+@keyframes pk-eq-turn {
+  0% { opacity: 0; transform: none; }
+  59% { opacity: 1; transform: none; }
+  79%, 100% { opacity: 0; transform: none; }
+}
+.pk-pct > :nth-child(3) { animation-name: pk-eq-turn; }
+@keyframes pk-st-river {
+  0% { opacity: 0; transform: none; }
+  74% { opacity: 1; transform: none; }
+  94%, 100% { opacity: 0; transform: none; }
+}
+.pk-street > :nth-child(4) { animation-name: pk-st-river; }
+@keyframes pk-eq-river {
+  0% { opacity: 0; transform: none; }
+  79% { opacity: 1; transform: none; }
+  94%, 100% { opacity: 0; transform: none; }
+}
+.pk-pct > :nth-child(4) { animation-name: pk-eq-river; }
+@keyframes pk-win {
+  0% { opacity: 0; transform: none; }
+  79% { opacity: 1; transform: none; }
+  94%, 100% { opacity: 0; transform: none; }
+}
+.pk-win { animation-name: pk-win; }
+@keyframes pk-bar {
+  0% { transform: scaleX(0); }
+  12% { transform: scaleX(0.23); }
+  12.8% { transform: scaleX(0.46); }
+  36% { transform: scaleX(0.5); }
+  36.8% { transform: scaleX(0.54); }
+  59% { transform: scaleX(0.44); }
+  59.8% { transform: scaleX(0.34); }
+  79% { transform: scaleX(0.67); }
+  79.8% { transform: scaleX(1); }
+  94%, 100% { transform: scaleX(0); }
+}
+.pk-bar span { animation-name: pk-bar; }
+
+/* Knight's tour: 64 hops by Warnsdorff's rule (always jump to the square with the fewest onward
+   moves), starting from b1. Hops are held frames (steps(1)) on one 11.55s clock. Each square lights up
+   when the knight lands and shows its move number once the knight leaves. Generated, not hand-edited. */
+.kt { --kt-trail: color-mix(in srgb, var(--accent) 16%, transparent); position: relative; display: grid;
+  grid-template-columns: repeat(8, 1fr); width: min(100%, 22rem); aspect-ratio: 1; border: 1px solid var(--line); }
+.kt-sq { display: grid; place-items: center; font-size: 0.6875rem; color: var(--muted); background-image: linear-gradient(var(--kt-trail), var(--kt-trail));
+  animation: 11.55s steps(1, end) infinite; }
+/* Checkerboard: dark squares are where (row + col) is odd */
+.kt-sq.d { background-color: color-mix(in srgb, var(--ink) 6%, transparent); }
+.kt-knight { position: absolute; top: 0; left: 0; width: 12.5%; aspect-ratio: 1; padding: 2%; opacity: 0;
+  animation: kt-knight 11.55s steps(1, end) infinite; }
+.kt-knight svg { display: block; width: 100%; height: 100%; }
+.kt-knight rect { fill: var(--ink); }
+@keyframes kt-knight {
+  0% { opacity: 1; transform: translate(100%, 700%); }
+  1.299% { opacity: 1; transform: translate(0%, 500%); }
+  2.597% { opacity: 1; transform: translate(100%, 300%); }
+  3.896% { opacity: 1; transform: translate(0%, 100%); }
+  5.195% { opacity: 1; transform: translate(200%, 0%); }
+  6.494% { opacity: 1; transform: translate(100%, 200%); }
+  7.792% { opacity: 1; transform: translate(0%, 0%); }
+  9.091% { opacity: 1; transform: translate(200%, 100%); }
+  10.39% { opacity: 1; transform: translate(0%, 200%); }
+  11.688% { opacity: 1; transform: translate(100%, 0%); }
+  12.987% { opacity: 1; transform: translate(300%, 100%); }
+  14.286% { opacity: 1; transform: translate(500%, 0%); }
+  15.584% { opacity: 1; transform: translate(700%, 100%); }
+  16.883% { opacity: 1; transform: translate(600%, 300%); }
+  18.182% { opacity: 1; transform: translate(700%, 500%); }
+  19.481% { opacity: 1; transform: translate(600%, 700%); }
+  20.779% { opacity: 1; transform: translate(400%, 600%); }
+  22.078% { opacity: 1; transform: translate(200%, 700%); }
+  23.377% { opacity: 1; transform: translate(0%, 600%); }
+  24.675% { opacity: 1; transform: translate(100%, 400%); }
+  25.974% { opacity: 1; transform: translate(200%, 600%); }
+  27.273% { opacity: 1; transform: translate(0%, 700%); }
+  28.571% { opacity: 1; transform: translate(100%, 500%); }
+  29.87% { opacity: 1; transform: translate(0%, 300%); }
+  31.169% { opacity: 1; transform: translate(100%, 100%); }
+  32.468% { opacity: 1; transform: translate(300%, 0%); }
+  33.766% { opacity: 1; transform: translate(200%, 200%); }
+  35.065% { opacity: 1; transform: translate(300%, 400%); }
+  36.364% { opacity: 1; transform: translate(400%, 200%); }
+  37.662% { opacity: 1; transform: translate(200%, 300%); }
+  38.961% { opacity: 1; transform: translate(0%, 400%); }
+  40.26% { opacity: 1; transform: translate(100%, 600%); }
+  41.558% { opacity: 1; transform: translate(300%, 700%); }
+  42.857% { opacity: 1; transform: translate(200%, 500%); }
+  44.156% { opacity: 1; transform: translate(300%, 300%); }
+  45.455% { opacity: 1; transform: translate(400%, 100%); }
+  46.753% { opacity: 1; transform: translate(600%, 0%); }
+  48.052% { opacity: 1; transform: translate(700%, 200%); }
+  49.351% { opacity: 1; transform: translate(500%, 100%); }
+  50.649% { opacity: 1; transform: translate(700%, 0%); }
+  51.948% { opacity: 1; transform: translate(600%, 200%); }
+  53.247% { opacity: 1; transform: translate(500%, 400%); }
+  54.545% { opacity: 1; transform: translate(300%, 500%); }
+  55.844% { opacity: 1; transform: translate(400%, 700%); }
+  57.143% { opacity: 1; transform: translate(600%, 600%); }
+  58.442% { opacity: 1; transform: translate(700%, 400%); }
+  59.74% { opacity: 1; transform: translate(500%, 500%); }
+  61.039% { opacity: 1; transform: translate(400%, 300%); }
+  62.338% { opacity: 1; transform: translate(200%, 400%); }
+  63.636% { opacity: 1; transform: translate(300%, 600%); }
+  64.935% { opacity: 1; transform: translate(500%, 700%); }
+  66.234% { opacity: 1; transform: translate(700%, 600%); }
+  67.532% { opacity: 1; transform: translate(600%, 400%); }
+  68.831% { opacity: 1; transform: translate(400%, 500%); }
+  70.13% { opacity: 1; transform: translate(500%, 300%); }
+  71.429% { opacity: 1; transform: translate(300%, 200%); }
+  72.727% { opacity: 1; transform: translate(400%, 0%); }
+  74.026% { opacity: 1; transform: translate(600%, 100%); }
+  75.325% { opacity: 1; transform: translate(700%, 300%); }
+  76.623% { opacity: 1; transform: translate(500%, 200%); }
+  77.922% { opacity: 1; transform: translate(400%, 400%); }
+  79.221% { opacity: 1; transform: translate(500%, 600%); }
+  80.519% { opacity: 1; transform: translate(700%, 700%); }
+  81.818% { opacity: 1; transform: translate(600%, 500%); }
+  84.416%, 100% { opacity: 0; transform: translate(600%, 500%); }
+}
+@keyframes kt-7 { 0% { background-image: none; color: transparent; } 7.792% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 9.091% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(1) { animation-name: kt-7; }
+@keyframes kt-10 { 0% { background-image: none; color: transparent; } 11.688% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 12.987% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(2) { animation-name: kt-10; }
+@keyframes kt-5 { 0% { background-image: none; color: transparent; } 5.195% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 6.494% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(3) { animation-name: kt-5; }
+@keyframes kt-26 { 0% { background-image: none; color: transparent; } 32.468% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 33.766% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(4) { animation-name: kt-26; }
+@keyframes kt-57 { 0% { background-image: none; color: transparent; } 72.727% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 74.026% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(5) { animation-name: kt-57; }
+@keyframes kt-12 { 0% { background-image: none; color: transparent; } 14.286% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 15.584% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(6) { animation-name: kt-12; }
+@keyframes kt-37 { 0% { background-image: none; color: transparent; } 46.753% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 48.052% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(7) { animation-name: kt-37; }
+@keyframes kt-40 { 0% { background-image: none; color: transparent; } 50.649% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 51.948% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(8) { animation-name: kt-40; }
+@keyframes kt-4 { 0% { background-image: none; color: transparent; } 3.896% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 5.195% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(9) { animation-name: kt-4; }
+@keyframes kt-25 { 0% { background-image: none; color: transparent; } 31.169% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 32.468% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(10) { animation-name: kt-25; }
+@keyframes kt-8 { 0% { background-image: none; color: transparent; } 9.091% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 10.39% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(11) { animation-name: kt-8; }
+@keyframes kt-11 { 0% { background-image: none; color: transparent; } 12.987% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 14.286% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(12) { animation-name: kt-11; }
+@keyframes kt-36 { 0% { background-image: none; color: transparent; } 45.455% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 46.753% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(13) { animation-name: kt-36; }
+@keyframes kt-39 { 0% { background-image: none; color: transparent; } 49.351% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 50.649% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(14) { animation-name: kt-39; }
+@keyframes kt-58 { 0% { background-image: none; color: transparent; } 74.026% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 75.325% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(15) { animation-name: kt-58; }
+@keyframes kt-13 { 0% { background-image: none; color: transparent; } 15.584% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 16.883% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(16) { animation-name: kt-13; }
+@keyframes kt-9 { 0% { background-image: none; color: transparent; } 10.39% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 11.688% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(17) { animation-name: kt-9; }
+@keyframes kt-6 { 0% { background-image: none; color: transparent; } 6.494% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 7.792% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(18) { animation-name: kt-6; }
+@keyframes kt-27 { 0% { background-image: none; color: transparent; } 33.766% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 35.065% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(19) { animation-name: kt-27; }
+@keyframes kt-56 { 0% { background-image: none; color: transparent; } 71.429% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 72.727% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(20) { animation-name: kt-56; }
+@keyframes kt-29 { 0% { background-image: none; color: transparent; } 36.364% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 37.662% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(21) { animation-name: kt-29; }
+@keyframes kt-60 { 0% { background-image: none; color: transparent; } 76.623% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 77.922% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(22) { animation-name: kt-60; }
+@keyframes kt-41 { 0% { background-image: none; color: transparent; } 51.948% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 53.247% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(23) { animation-name: kt-41; }
+@keyframes kt-38 { 0% { background-image: none; color: transparent; } 48.052% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 49.351% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(24) { animation-name: kt-38; }
+@keyframes kt-24 { 0% { background-image: none; color: transparent; } 29.87% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 31.169% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(25) { animation-name: kt-24; }
+@keyframes kt-3 { 0% { background-image: none; color: transparent; } 2.597% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 3.896% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(26) { animation-name: kt-3; }
+@keyframes kt-30 { 0% { background-image: none; color: transparent; } 37.662% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 38.961% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(27) { animation-name: kt-30; }
+@keyframes kt-35 { 0% { background-image: none; color: transparent; } 44.156% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 45.455% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(28) { animation-name: kt-35; }
+@keyframes kt-48 { 0% { background-image: none; color: transparent; } 61.039% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 62.338% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(29) { animation-name: kt-48; }
+@keyframes kt-55 { 0% { background-image: none; color: transparent; } 70.13% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 71.429% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(30) { animation-name: kt-55; }
+@keyframes kt-14 { 0% { background-image: none; color: transparent; } 16.883% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 18.182% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(31) { animation-name: kt-14; }
+@keyframes kt-59 { 0% { background-image: none; color: transparent; } 75.325% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 76.623% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(32) { animation-name: kt-59; }
+@keyframes kt-31 { 0% { background-image: none; color: transparent; } 38.961% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 40.26% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(33) { animation-name: kt-31; }
+@keyframes kt-20 { 0% { background-image: none; color: transparent; } 24.675% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 25.974% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(34) { animation-name: kt-20; }
+@keyframes kt-49 { 0% { background-image: none; color: transparent; } 62.338% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 63.636% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(35) { animation-name: kt-49; }
+@keyframes kt-28 { 0% { background-image: none; color: transparent; } 35.065% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 36.364% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(36) { animation-name: kt-28; }
+@keyframes kt-61 { 0% { background-image: none; color: transparent; } 77.922% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 79.221% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(37) { animation-name: kt-61; }
+@keyframes kt-42 { 0% { background-image: none; color: transparent; } 53.247% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 54.545% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(38) { animation-name: kt-42; }
+@keyframes kt-53 { 0% { background-image: none; color: transparent; } 67.532% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 68.831% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(39) { animation-name: kt-53; }
+@keyframes kt-46 { 0% { background-image: none; color: transparent; } 58.442% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 59.74% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(40) { animation-name: kt-46; }
+@keyframes kt-2 { 0% { background-image: none; color: transparent; } 1.299% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 2.597% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(41) { animation-name: kt-2; }
+@keyframes kt-23 { 0% { background-image: none; color: transparent; } 28.571% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 29.87% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(42) { animation-name: kt-23; }
+@keyframes kt-34 { 0% { background-image: none; color: transparent; } 42.857% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 44.156% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(43) { animation-name: kt-34; }
+@keyframes kt-43 { 0% { background-image: none; color: transparent; } 54.545% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 55.844% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(44) { animation-name: kt-43; }
+@keyframes kt-54 { 0% { background-image: none; color: transparent; } 68.831% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 70.13% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(45) { animation-name: kt-54; }
+@keyframes kt-47 { 0% { background-image: none; color: transparent; } 59.74% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 61.039% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(46) { animation-name: kt-47; }
+@keyframes kt-64 { 0% { background-image: none; color: transparent; } 81.818% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 84.416% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(47) { animation-name: kt-64; }
+@keyframes kt-15 { 0% { background-image: none; color: transparent; } 18.182% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 19.481% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(48) { animation-name: kt-15; }
+@keyframes kt-19 { 0% { background-image: none; color: transparent; } 23.377% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 24.675% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(49) { animation-name: kt-19; }
+@keyframes kt-32 { 0% { background-image: none; color: transparent; } 40.26% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 41.558% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(50) { animation-name: kt-32; }
+@keyframes kt-21 { 0% { background-image: none; color: transparent; } 25.974% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 27.273% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(51) { animation-name: kt-21; }
+@keyframes kt-50 { 0% { background-image: none; color: transparent; } 63.636% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 64.935% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(52) { animation-name: kt-50; }
+@keyframes kt-17 { 0% { background-image: none; color: transparent; } 20.779% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 22.078% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(53) { animation-name: kt-17; }
+@keyframes kt-62 { 0% { background-image: none; color: transparent; } 79.221% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 80.519% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(54) { animation-name: kt-62; }
+@keyframes kt-45 { 0% { background-image: none; color: transparent; } 57.143% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 58.442% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(55) { animation-name: kt-45; }
+@keyframes kt-52 { 0% { background-image: none; color: transparent; } 66.234% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 67.532% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(56) { animation-name: kt-52; }
+@keyframes kt-22 { 0% { background-image: none; color: transparent; } 27.273% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 28.571% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(57) { animation-name: kt-22; }
+@keyframes kt-1 { 0% { background-image: none; color: transparent; } 0% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 1.299% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(58) { animation-name: kt-1; }
+@keyframes kt-18 { 0% { background-image: none; color: transparent; } 22.078% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 23.377% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(59) { animation-name: kt-18; }
+@keyframes kt-33 { 0% { background-image: none; color: transparent; } 41.558% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 42.857% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(60) { animation-name: kt-33; }
+@keyframes kt-44 { 0% { background-image: none; color: transparent; } 55.844% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 57.143% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(61) { animation-name: kt-44; }
+@keyframes kt-51 { 0% { background-image: none; color: transparent; } 64.935% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 66.234% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(62) { animation-name: kt-51; }
+@keyframes kt-16 { 0% { background-image: none; color: transparent; } 19.481% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 20.779% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(63) { animation-name: kt-16; }
+@keyframes kt-63 { 0% { background-image: none; color: transparent; } 80.519% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 81.818% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
+.kt-sq:nth-child(64) { animation-name: kt-63; }
 
 /* ---------- Project page ---------- */
 .page-head { padding-block: clamp(2rem, 8vw, 5rem) 2.5rem; }

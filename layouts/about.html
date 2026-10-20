@@ -8,10 +8,57 @@
 <section class="wrap about-off" aria-labelledby="off-title">
   <h2 id="off-title" class="label">// When I'm not coding</h2>
   <ul class="interests">
-    <li>Producing music</li>
-    <li>Playing poker</li>
-    <li>Chess</li>
-    <li>Skateboarding</li>
+    <li class="interest">
+      <details>
+        <summary>Producing music</summary>
+        <div class="interest-body">
+          <dl class="interest-facts">
+            <div><dt>DAW</dt><dd>FL Studio</dd></div>
+            <div><dt>Building</dt><dd>A granular sampler <span class="wip">WIP</span></dd></div>
+          </dl>
+          <figure class="interest-fig">
+            {{ partial "granular.html" . }}
+            <figcaption>Grains are cut from a sample and scattered back out as something new.</figcaption>
+          </figure>
+          <ol class="process">
+            <li><span>01</span> Load a sample</li>
+            <li><span>02</span> Slice it into tiny grains</li>
+            <li><span>03</span> Scatter, pitch, and layer them</li>
+          </ol>
+        </div>
+      </details>
+    </li>
+    <li class="interest">
+      <details>
+        <summary>Playing poker</summary>
+        <div class="interest-body">
+          <figure class="interest-fig">
+            {{ partial "poker.html" . }}
+          </figure>
+        </div>
+      </details>
+    </li>
+    <li class="interest">
+      <details>
+        <summary>Chess</summary>
+        <div class="interest-body">
+          <figure class="interest-fig">
+            {{ partial "knights-tour.html" . }}
+            <figcaption>A knight's tour: all 64 squares, each visited once.</figcaption>
+          </figure>
+        </div>
+      </details>
+    </li>
+    <li class="interest">
+      <details>
+        <summary>Skateboarding</summary>
+        <div class="interest-body">
+          <figure class="interest-fig">
+            {{ partial "skate.html" . }}
+          </figure>
+        </div>
+      </details>
+    </li>
   </ul>
 </section>
 {{ end }}
