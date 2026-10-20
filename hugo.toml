@@ -7,7 +7,7 @@ disableKinds = ['taxonomy', 'term', 'rss']
 [params]
   description = 'Shreyas Suman builds security tools and software. Projects: TalosAI and Sleeper.'
   github = 'https://github.com/shreyassuman2'
-  linkedin = ''          # full profile URL; the link is hidden while empty
+  linkedin = 'https://www.linkedin.com/in/shreyas-suman-ba9691355/'          # full profile URL; the link is hidden while empty
   cfBeaconToken = ''     # Cloudflare Web Analytics token; no script is emitted while empty
 
 [markup.highlight]

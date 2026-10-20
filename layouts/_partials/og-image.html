@@ -1,11 +1,11 @@
 {{/* Build a 1200x630 link-preview card for this page at build time. */}}
 {{ $base := resources.Get "og/base.png" }}
-{{ $font := resources.Get "og/InstrumentSerif-Regular.ttf" }}
+{{ $font := resources.Get "og/IBMPlexMono-Medium.ttf" }}
 {{ $title := cond .IsHome site.Title .Title }}
 {{ $kicker := cond .IsHome "Projects & writing" (.Params.kicker | default "Project") }}
 {{ $img := $base | images.Filter
-  (images.Text $kicker (dict "font" $font "size" 40 "color" "#c2410c" "x" 96 "y" 150))
-  (images.Text $title (dict "font" $font "size" 120 "color" "#1d1b17" "x" 96 "y" 220 "linespacing" 4))
-  (images.Text "shreyassuman.com" (dict "font" $font "size" 40 "color" "#6b655a" "x" 96 "y" 520))
+  (images.Text $kicker (dict "font" $font "size" 40 "color" "#ff2a2a" "x" 96 "y" 150))
+  (images.Text $title (dict "font" $font "size" 96 "color" "#eaeaea" "x" 96 "y" 220 "linespacing" 4))
+  (images.Text "shreyassuman.com" (dict "font" $font "size" 40 "color" "#8f8f8f" "x" 96 "y" 520))
 }}
 {{ return $img }}

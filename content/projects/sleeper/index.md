@@ -3,9 +3,7 @@ title: Sleeper
 kicker: Personal project
 date: 2026-10-10
 weight: 2
-summary: Pick five albums you like and get one you probably haven't heard, with a reason built from the same signals that ranked it.
-role: Solo (design, engine, frontend, evaluation, deploy)
-team: Just me
+summary: Pick five albums you like and get one niche album to play next, plus four runners-up.
 stack: [Python, FastAPI, SQLite, React, Vite, Last.fm API, MusicBrainz]
 repo: https://github.com/shreyassuman2/sleeper
 demo: https://sleeper-pick.vercel.app/
@@ -15,7 +13,7 @@ coverAlt: Searching for five albums in Sleeper and getting one niche recommendat
 
 ## Problem
 
-Most recommenders point you back at what's already popular. I wanted something that takes a handful of albums I like and surfaces a less obvious one, and tells me *why* without making it up.
+Most recommenders are either inaccurate or keep pointing you at the most popular picks. Sleeper is built to find "sleeper picks": pick 5 albums you like and get 1 niche album to play next plus 4 runners-up, each with a one-line reason built from a scoring index.
 
 ## Approach
 
@@ -32,7 +30,3 @@ Every API call goes through a SQLite cache and a per-API rate limiter, and picks
 ## Result
 
 It's live, with CI and a pytest suite. A leave-one-out evaluation gives a **45%** album hit rate in the top 20, against **47%** for a naive similar-artists baseline. That gap is the point: the evaluation rewards predicting albums you already like, and the popularity penalty deliberately trades a little of that for picks you don't know yet.
-
-## My role
-
-Solo project: the scoring engine, API, React frontend, evaluation harness, and deployment on Render and Vercel.

@@ -9,16 +9,7 @@ Owner: Shreyas Suman · Drafted: 2026-10-19 · Last updated: 2026-10-19 (end of 
 - Domain `shreyassuman.com` is registered on Cloudflare. Nameservers, registrar lock, DNSSEC and the null-mail records (§5.3) are all live and verified with `dig`.
 - Local preview: `hugo server` from the project root → http://localhost:1313 (live reload; `_headers` is not applied locally).
 
-**Next task: redesign with taste-skill (requested; do NOT push, the user wants to review locally first).**
-- The skill is installed at `.claude/skills/design-taste-frontend/` (skill name `design-taste-frontend`). Follow its `SKILL.md` "Redesign" path: inspect the current site into `.taste-skill/before`, write the argument and copy deck, deal a direction with `draw.mjs`, rebuild, gate with `lint.mjs` + `inspect.mjs`, look at screenshots, then `.taste-skill/after`.
-- The current design breaks several of the skill's house rules, so expect them to change: monospace labels/tags/footer, eyebrows ("Hi, I'm", kicker line), 01/02 card numbering, the italic orange accent word in the name, hairline rules (`.label::after`, `.facts`, footer border), 1px outlined tags/cards, and the cream ground + rust accent (the skill's banned "assistant palette").
-- **Constraints the redesign must keep** (from this spec, not negotiable without asking the user):
-  - Stay on Hugo; edit `layouts/`, `assets/css/main.css`, `content/`. No framework migration, no npm build step for the site.
-  - CSP in `static/_headers`: no inline `<script>` or `style=""`, no third-party scripts except Cloudflare Analytics, no hotlinked images or fonts. Any JS (motion, a "live thing") goes in a file under `assets/` or `static/`. Any found picture is downloaded into the repo and credited in the footer.
-  - Fonts stay self-hosted WOFF2 (currently Instrument Serif in `static/fonts/`, plus a TTF in `assets/og/` used for OG images; update both if the face changes).
-  - Light/dark via `prefers-color-scheme`, no toggle. `prefers-reduced-motion` respected. Content must render with JS off.
-  - Real content only: TalosAI and Sleeper text comes from their READMEs; no invented stats, quotes or logos.
-- **Open tension to raise with the user:** this spec said "no JS, light motion only"; the skill requires a motion layer (≥8 moving elements) and "one live thing". Ask whether a small external JS file is OK before adding it.
+**Design decision (2026-10-19): keep the original v1 design.** Two redesigns were built and rejected by the user: a taste-skill "split stage" (orange, Imbue, sticky photo half) and a terminal/CRT look (green mono, scanlines). The user found both ugly and asked to go back to v1. Both are saved in `git stash` ("terminal + split-stage redesigns"). Don't propose either again; any future design change should be small tweaks to v1, asked about first.
 
 **Deploy steps (after the redesign is approved)**
 1. Cloudflare → Workers & Pages → Create → Pages → Connect to Git, GitHub App scoped to **only** `personal-website`.
@@ -27,7 +18,6 @@ Owner: Shreyas Suman · Drafted: 2026-10-19 · Last updated: 2026-10-19 (end of 
 4. Then: SSL Full (strict), Always Use HTTPS, CAA records (Cloudflare adds its own CAs once any CAA exists), Web Analytics token → `cfBeaconToken` in `hugo.toml`, run the checklist in §6.
 
 **Still needed from the user**
-- LinkedIn profile URL → `linkedin` in `hugo.toml` (the link is hidden while empty).
 - Confirm the TalosAI "My role" text (it came from hackathon notes, not the repo): malware lead, co-owned prompts, built the first triage backend, ran the accuracy evals.
 - OK from teammate Enrique Mowad, whose name shows in the TalosAI screenshots' sidebar (optional).
 - Optionally a still screenshot of Sleeper's results for its card (the GIF's first frame is a faded empty state).
@@ -67,11 +57,11 @@ GitHub (`https://github.com/shreyassuman2`) and LinkedIn (URL pending). Use `rel
 
 ## 3. Design
 
-Current (v1, pre-redesign): Instrument Serif display + system sans, cream ground `#f3efe6` / ink `#1d1b17` / rust accent `#c2410c`, dark set under `prefers-color-scheme`, SVG paper-grain overlay, mono labels and tags, 2-column project cards. See §0 for what the taste-skill redesign is expected to change.
+Current (v1 layout, dark restyle 2026-10-19): same layout as v1, restyled with small changes only. Dark only (`#0a0a0a` ground, `#eaeaea` ink, one red accent `#ff2a2a`, one green `>` prompt). Fonts: Inter 800 uppercase for the name and page titles (home, Projects, 404); IBM Plex Mono for project titles, labels, nav, tags; Space Grotesk 600 for prose headings (Problem/Approach/Result); system sans for body. Square corners, no grain. User-approved; change only on request.
 
 Fixed requirements regardless of look:
 - **Creative / personal, expressed only through styling.** Only code projects are listed; music/3D shows up in the look, not as content.
-- **Theme:** follows the OS setting via `prefers-color-scheme`, no toggle. All colours as CSS custom properties with light and dark sets.
+- **Theme:** dark only (user's choice, replaces the earlier follow-the-OS rule). All colours as CSS custom properties.
 - Pages render fully without JS. The only third-party script allowed is Cloudflare Web Analytics.
 - Self-hosted fonts (WOFF2). No Google Fonts request.
 - Responsive down to 360px. Target Lighthouse ≥ 95 in all four categories.
@@ -163,8 +153,8 @@ Cross-Origin-Opener-Policy: same-origin
 - [x] Layouts, CSS tokens (light/dark), home page, Projects page, TalosAI and Sleeper pages, 404
 - [x] `_headers`, `robots.txt`, sitemap, favicon, per-page OG images
 - [x] taste-skill installed and committed
-- [ ] **Redesign with taste-skill (local only, user reviews before pushing)**
-- [ ] LinkedIn URL
+- [x] Redesign tried twice (taste-skill split stage, terminal/CRT); user rejected both and kept v1
+- [x] LinkedIn URL (https://www.linkedin.com/in/shreyas-suman-ba9691355/)
 - [ ] Connect Cloudflare Pages, custom domain, `www` redirect, SSL Full (strict), CAA
 - [ ] Web Analytics token
 - [ ] Launch checklist (§6)
@@ -172,6 +162,4 @@ Cross-Origin-Opener-Policy: same-origin
 - [ ] Later, optional: resume PDF, blog section
 
 ## 8. Open questions
-- Is a small external JS file OK for the redesign's motion layer / "live thing"? (See §0.)
-- LinkedIn URL.
 - Confirm the TalosAI role wording.
