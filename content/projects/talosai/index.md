@@ -3,7 +3,7 @@ title: TalosAI
 kicker: CrowdStrike × AIC Hackathon, tied 3rd place
 date: 2026-10-12
 weight: 1
-summary: AI-assisted alert and phishing triage for SOC analysts, built so the email it's checking can't talk it out of a verdict.
+summary: An AI tool that helps security analysts sort alerts and spot phishing emails.
 role: Malware lead and prompt engineer; built the first triage backend
 team: 4 people, 1 day
 stack: [TypeScript, Deno, Supabase, Claude API, Python, React]
