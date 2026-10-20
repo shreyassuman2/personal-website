@@ -31,7 +31,7 @@ After that, code checks the answer:
 
 ## Result
 
-- Tied for **3rd place** at the CrowdStrike × AIC Hackathon (first track).
+- Tied for **3rd place** at the CrowdStrike × AIC Hackathon (track one).
 - **96.7%** agreement (290/300) on emails never used for tuning, across CEAS-08, SpamAssassin and Enron.
 - **100/100** on the Nazario phishing corpus, with a **4.7%** false-alarm rate on legitimate mail.
 - A root read of `/etc/shadow` that Wazuh rated low (level 3 of 15) is flagged **critical**.
