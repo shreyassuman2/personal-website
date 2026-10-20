@@ -25,6 +25,7 @@
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   /* Motion: fast and decisive, no bounce. Hard stop at the end, never a drift. */
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   --beat: 60ms;   /* stagger between lines in the boot sequence */
 }
 
@@ -235,19 +236,21 @@ a:hover { color: var(--accent); }
 .hero > :nth-child(5), .page-head > :nth-child(5) { animation-delay: calc(5 * var(--beat)); }
 /* The big title wipes on left to right, like a line being written */
 .hero .display, .page-head .display { animation: wipe 600ms var(--ease-out) calc(1 * var(--beat)) backwards; }
-/* Home: the name slides in at ~13fps, brightening from black to white as it lands.
+/* Home: the name slides in at ~16fps, brightening from black to white as it lands.
    Each keyframe is held for one frame (steps(1)), and the gaps between keyframes shrink,
    so it decelerates like an ease-out, but in jumps. */
 @keyframes slide-frames {
-  0%   { transform: translateX(-40%);  color: var(--bg); }
-  11%  { transform: translateX(-24%);  color: color-mix(in srgb, var(--ink) 12%, var(--bg)); }
-  22%  { transform: translateX(-14%);  color: color-mix(in srgb, var(--ink) 25%, var(--bg)); }
-  33%  { transform: translateX(-8%);   color: color-mix(in srgb, var(--ink) 40%, var(--bg)); }
-  44%  { transform: translateX(-4%);   color: color-mix(in srgb, var(--ink) 55%, var(--bg)); }
-  56%  { transform: translateX(-1.5%); color: color-mix(in srgb, var(--ink) 70%, var(--bg)); }
-  67%  { transform: none; color: color-mix(in srgb, var(--ink) 82%, var(--bg)); }
-  78%  { transform: none; color: color-mix(in srgb, var(--ink) 92%, var(--bg)); }
-  89%, 100% { transform: none; color: var(--ink); }
+  0%            { transform: translateX(-40%); color: var(--bg); }
+  9.09%         { transform: translateX(-28%); color: color-mix(in srgb, var(--ink) 10%, var(--bg)); }
+  18.18%        { transform: translateX(-19%); color: color-mix(in srgb, var(--ink) 20%, var(--bg)); }
+  27.27%        { transform: translateX(-12.5%); color: color-mix(in srgb, var(--ink) 31%, var(--bg)); }
+  36.36%        { transform: translateX(-8%); color: color-mix(in srgb, var(--ink) 43%, var(--bg)); }
+  45.45%        { transform: translateX(-4.5%); color: color-mix(in srgb, var(--ink) 55%, var(--bg)); }
+  54.55%        { transform: translateX(-2.5%); color: color-mix(in srgb, var(--ink) 66%, var(--bg)); }
+  63.64%        { transform: translateX(-1%); color: color-mix(in srgb, var(--ink) 77%, var(--bg)); }
+  72.73%        { transform: none; color: color-mix(in srgb, var(--ink) 86%, var(--bg)); }
+  81.82%        { transform: none; color: color-mix(in srgb, var(--ink) 94%, var(--bg)); }
+  90.91%, 100%  { transform: none; color: var(--ink); }
 }
 .hero .display { animation: slide-frames 700ms steps(1, end) calc(1 * var(--beat)) backwards; }
 /* Everything below the header lands last */
@@ -265,6 +268,55 @@ main > section + section, .facts, .cover { animation: boot 400ms var(--ease-out)
   background: var(--ink);
   animation: blink 1s steps(1) infinite;
 }
+
+/* ---------- Page transitions: the next page slides in over the current one ---------- */
+/* Only header nav clicks keep it; assets/js/nav-transition.js skips it for every other navigation. */
+@view-transition { navigation: auto; }
+/* The header is shared by every page, so it holds still while the content moves */
+.site-header { view-transition-name: site-header; }
+@media (prefers-reduced-motion: no-preference) {
+  /* 16 held frames at ~25fps (steps(1)): nearly smooth, with a slight film-like stutter.
+     The distance per frame follows a sine ease-in-out. */
+  @keyframes page-out {
+    0%          { transform: translateX(-0.24%); opacity: 0.99; }
+    6.25%       { transform: translateX(-0.95%); opacity: 0.96; }
+    12.5%       { transform: translateX(-2.11%); opacity: 0.92; }
+    18.75%      { transform: translateX(-3.66%); opacity: 0.85; }
+    25%         { transform: translateX(-5.56%); opacity: 0.78; }
+    31.25%      { transform: translateX(-7.72%); opacity: 0.69; }
+    37.5%       { transform: translateX(-10.06%); opacity: 0.6; }
+    43.75%      { transform: translateX(-12.5%); opacity: 0.5; }
+    50%         { transform: translateX(-14.94%); opacity: 0.4; }
+    56.25%      { transform: translateX(-17.28%); opacity: 0.31; }
+    62.5%       { transform: translateX(-19.44%); opacity: 0.22; }
+    68.75%      { transform: translateX(-21.34%); opacity: 0.15; }
+    75%         { transform: translateX(-22.89%); opacity: 0.08; }
+    81.25%      { transform: translateX(-24.05%); opacity: 0.04; }
+    87.5%       { transform: translateX(-24.76%); opacity: 0.01; }
+    93.75%, 100%{ transform: translateX(-25%); opacity: 0; }
+  }
+  @keyframes page-in {
+    0%          { transform: translateX(99.04%); }
+    6.25%       { transform: translateX(96.19%); }
+    12.5%       { transform: translateX(91.57%); }
+    18.75%      { transform: translateX(85.36%); }
+    25%         { transform: translateX(77.78%); }
+    31.25%      { transform: translateX(69.13%); }
+    37.5%       { transform: translateX(59.75%); }
+    43.75%      { transform: translateX(50%); }
+    50%         { transform: translateX(40.25%); }
+    56.25%      { transform: translateX(30.87%); }
+    62.5%       { transform: translateX(22.22%); }
+    68.75%      { transform: translateX(14.64%); }
+    75%         { transform: translateX(8.43%); }
+    81.25%      { transform: translateX(3.81%); }
+    87.5%       { transform: translateX(0.96%); }
+    93.75%, 100%{ transform: translateX(0%); }
+  }
+  ::view-transition-old(root) { animation: page-out 640ms steps(1, end) both; }
+  ::view-transition-new(root) { animation: page-in 640ms steps(1, end) both; }
+}
+/* With reduced motion, the browser's default crossfade applies instead of the slide */
 
 /* ---------- Motion preferences ---------- */
 @media (prefers-reduced-motion: reduce) {
