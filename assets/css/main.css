@@ -509,13 +509,13 @@ a:hover { color: var(--accent); }
 /* Knight's tour: 64 hops by Warnsdorff's rule (always jump to the square with the fewest onward
    moves), starting from b1. Hops are held frames (steps(1)) on one 11.55s clock. Each square lights up
    when the knight lands and shows its move number once the knight leaves. Generated, not hand-edited. */
-.kt { --kt-trail: color-mix(in srgb, var(--accent) 16%, transparent); position: relative; display: grid;
+.kt { --kt-trail: color-mix(in srgb, var(--accent) 22%, var(--surface)); position: relative; display: grid;
   grid-template-columns: repeat(8, 1fr); width: min(100%, 22rem); aspect-ratio: 1; border: 1px solid var(--line); }
 .kt-sq { display: grid; place-items: center; font-size: 0.6875rem; color: var(--muted); background-image: linear-gradient(var(--kt-trail), var(--kt-trail));
   animation: 11.55s steps(1, end) infinite; }
 /* Checkerboard: dark squares are where (row + col) is odd */
 .kt-sq.d { background-color: color-mix(in srgb, var(--ink) 6%, transparent); }
-.kt-knight { position: absolute; top: 0; left: 0; width: 12.5%; aspect-ratio: 1; padding: 2%; opacity: 0;
+.kt-knight { position: absolute; top: 0; left: 0; width: 12.5%; aspect-ratio: 1; padding: 2.5% 2.25% 2%; opacity: 0;
   animation: kt-knight 11.55s steps(1, end) infinite; }
 .kt-knight svg { display: block; width: 100%; height: 100%; }
 .kt-knight rect { fill: var(--ink); }
@@ -714,6 +714,14 @@ a:hover { color: var(--accent); }
 .kt-sq:nth-child(63) { animation-name: kt-16; }
 @keyframes kt-63 { 0% { background-image: none; color: transparent; } 80.519% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: transparent; } 81.818% { background-image: linear-gradient(var(--kt-trail), var(--kt-trail)); color: var(--muted); } 98.268%, 100% { background-image: none; color: transparent; } }
 .kt-sq:nth-child(64) { animation-name: kt-63; }
+
+/* Board beside the maths; stacks on narrow screens */
+.kt-layout { display: grid; gap: 1.5rem; }
+@media (min-width: 40rem) { .kt-layout { grid-template-columns: 18rem 1fr; align-items: center; } }
+.kt-math { margin: 0; display: grid; gap: 1.25rem; }
+.kt-math dt { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.25rem; }
+.kt-math dd { margin: 0; font-size: 0.8125rem; line-height: 1.5; }
+.kt-eq { display: block; color: var(--ink); font-size: 0.875rem; margin-bottom: 0.25rem; }
 
 /* ---------- Project page ---------- */
 .page-head { padding-block: clamp(2rem, 8vw, 5rem) 2.5rem; }
