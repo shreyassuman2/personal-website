@@ -4,3 +4,8 @@ resources/_gen/
 .hugo_build.lock
 .env*
 .taste-skill/
+
+# Local only: planning notes and Claude Code skills
+.plans/
+.claude/
+skills-lock.json
