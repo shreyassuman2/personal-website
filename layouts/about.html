@@ -46,7 +46,7 @@
             <div class="kt-layout">
               {{ partial "knights-tour.html" . }}
               <dl class="kt-math">
-                <div><dt>Move</dt><dd><span class="kt-eq">Δx² + Δy² = 5</span>Every jump is 1 by 2 or 2 by 1, and 1² + 2² = 5.</dd></div>
+                <div><dt>Move</dt><dd><span class="kt-eq">Δx² + Δy² = 5</span>Every jump is 1 by 2 or 2 by 1, and <span class="nowrap">1² + 2² = 5</span>.</dd></div>
                 <div><dt>Rule</dt><dd><span class="kt-eq">next = argmin deg(s), s ∈ N(v)</span>Warnsdorff, 1823: jump to the square with the fewest onward moves.</dd></div>
                 <div><dt>Idea</dt><dd><span class="kt-eq">Greedy: best move now, never undo</span>Hard-to-reach squares get used up first, so the knight rarely strands itself.</dd></div>
               </dl>
