@@ -5,59 +5,40 @@
   <div class="lede about-intro">{{ .Content }}</div>
 </section>
 
+{{/* Interests as cards, laid out like the project cards; each diagram stands in for the cover */}}
 <section class="wrap about-off" aria-labelledby="off-title">
   <h2 id="off-title" class="label">// When I'm not coding</h2>
-  <ul class="interests">
-    <li class="interest">
-      <details>
-        <summary>Producing music</summary>
-        <div class="interest-body">
-          <dl class="interest-facts">
-            <div><dt>DAW</dt><dd>FL Studio</dd></div>
-            <div><dt>Building</dt><dd>A granular sampler <span class="wip">WIP</span></dd></div>
-          </dl>
-          <figure class="interest-fig">
-            {{ partial "granular.html" . }}
-            <figcaption>Grains are cut from a sample and scattered back out as something new.</figcaption>
-          </figure>
-          <ol class="process">
-            <li><span>01</span> Load a sample</li>
-            <li><span>02</span> Slice it into tiny grains</li>
-            <li><span>03</span> Scatter, pitch, and layer them</li>
-          </ol>
-        </div>
-      </details>
+  <ol class="cards interests">
+    <li class="card interest">
+      <figure class="interest-fig">{{ partial "granular.html" . }}</figure>
+      <div class="card-body">
+        <h3><span class="card-num">01</span>Producing music</h3>
+        <ul class="tags" aria-label="Setup">
+          <li>FL Studio</li>
+          <li>Granular sampler <span class="wip">WIP</span></li>
+        </ul>
+      </div>
     </li>
-    <li class="interest">
-      <details>
-        <summary>Playing poker</summary>
-        <div class="interest-body">
-          <figure class="interest-fig">
-            {{ partial "poker.html" . }}
-          </figure>
-        </div>
-      </details>
+    <li class="card interest">
+      <figure class="interest-fig">{{ partial "poker.html" . }}</figure>
+      <div class="card-body">
+        <h3><span class="card-num">02</span>Playing poker</h3>
+        {{/* Shown by assets/js/poker.js, which builds the live hand picker */}}
+        <button class="pk-btn pk-toggle" type="button" aria-expanded="false" hidden>Pick your own hands</button>
+      </div>
     </li>
-    <li class="interest">
-      <details>
-        <summary>Chess</summary>
-        <div class="interest-body">
-          <figure class="interest-fig">
-            {{ partial "chess.html" . }}
-          </figure>
-        </div>
-      </details>
+    <li class="card interest">
+      <figure class="interest-fig">{{ partial "chess.html" . }}</figure>
+      <div class="card-body">
+        <h3><span class="card-num">03</span>Chess</h3>
+      </div>
     </li>
-    <li class="interest">
-      <details>
-        <summary>Skateboarding</summary>
-        <div class="interest-body">
-          <figure class="interest-fig">
-            {{ partial "skate.html" . }}
-          </figure>
-        </div>
-      </details>
+    <li class="card interest">
+      <figure class="interest-fig">{{ partial "skate.html" . }}</figure>
+      <div class="card-body">
+        <h3><span class="card-num">04</span>Skateboarding</h3>
+      </div>
     </li>
-  </ul>
+  </ol>
 </section>
 {{ end }}

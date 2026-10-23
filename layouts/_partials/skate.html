@@ -1,5 +1,8 @@
-{{/* Boxy trick loop (ollie, kickflip, pop shuvit, 360 flip), cropped close on the board: only the legs and the bottom of the torso are in frame. Animated in main.css (.sk-*). */}}
-<svg class="skate-svg" viewBox="220 84 160 54" role="img" aria-label="Animation: a blocky skateboarder does an ollie, a kickflip, a pop shuvit and a 360 flip">
+{{/* Boxy trick loop (ollie, kickflip, pop shuvit, 360 flip), cropped close on the board: only the legs and the bottom of the torso are in frame.
+     Free-body arrows flash in at each phase: the pop (F, N), the front foot's slide on the ollie (f), airtime (mg) and the landing (N).
+     Each arrow is drawn where the board sits in that held frame. Animated in main.css (.sk-*). */}}
+<svg class="skate-svg" viewBox="220 84 160 62" role="img" aria-label="Animation: a blocky skateboarder does an ollie, a kickflip, a pop shuvit and a 360 flip, with force arrows. At the pop the back foot pushes the tail down (F) and the ground pushes back up (N); the front foot's friction drags the nose up (f); in the air only gravity acts (mg); on landing the ground pushes up at both wheels (N).">
+  <g class="sk-names"><text x="225" y="92">Ollie</text><text x="225" y="92">Kickflip</text><text x="225" y="92">Pop shuvit</text><text x="225" y="92">360 flip</text></g>
   <line class="sk-ground" x1="200" y1="131" x2="400" y2="131"/>
   <g transform="translate(300 120)">
     <rect class="sk-shadow" x="-30" y="10" width="60" height="3"/>
@@ -14,5 +17,64 @@
         <rect x="-8" y="-48" width="16" height="25"/>
       </g>
     </g>
+  </g>
+  <g class="sk-force sk-f-pop">
+    <line x1="276" y1="104" x2="276" y2="124"/><polygon points="273,123 279,123 276,128"/><text x="272" y="112" text-anchor="end">F</text>
+    <line x1="270" y1="145" x2="270" y2="135"/><polygon points="267,136 273,136 270,131"/><text x="274" y="143">N</text>
+  </g>
+  <g class="sk-force sk-f-slide1">
+    <line x1="310" y1="95.8" x2="330" y2="93.7"/><polygon points="330.3,96.7 329.7,90.7 335,93.2"/><text x="320" y="91">f</text>
+  </g>
+  <g class="sk-force sk-f-slide2">
+    <line x1="314" y1="90" x2="333" y2="90"/><polygon points="332,87 332,93 337,90"/><text x="339" y="92">f</text>
+  </g>
+  <g class="sk-force sk-f-air1">
+    <line x1="300" y1="95" x2="300" y2="107"/><polygon points="297,106 303,106 300,111"/><text x="304" y="104">mg</text>
+  </g>
+  <g class="sk-force sk-f-air2">
+    <line x1="300" y1="97" x2="300" y2="109"/><polygon points="297,108 303,108 300,113"/><text x="304" y="106">mg</text>
+  </g>
+  <g class="sk-force sk-f-air3">
+    <line x1="300" y1="109" x2="300" y2="121"/><polygon points="297,120 303,120 300,125"/><text x="304" y="118">mg</text>
+  </g>
+  <g class="sk-force sk-f-air4">
+    <line x1="300" y1="103" x2="300" y2="115"/><polygon points="297,114 303,114 300,119"/><text x="304" y="112">mg</text>
+  </g>
+  <g class="sk-force sk-f-air5">
+    <line x1="300" y1="99" x2="300" y2="111"/><polygon points="297,110 303,110 300,115"/><text x="304" y="108">mg</text>
+  </g>
+  <g class="sk-force sk-f-air6">
+    <line x1="300" y1="95" x2="300" y2="107"/><polygon points="297,106 303,106 300,111"/><text x="304" y="104">mg</text>
+  </g>
+  <g class="sk-force sk-f-air7">
+    <line x1="300" y1="109" x2="300" y2="121"/><polygon points="297,120 303,120 300,125"/><text x="304" y="118">mg</text>
+  </g>
+  <g class="sk-force sk-f-air8">
+    <line x1="300" y1="109" x2="300" y2="121"/><polygon points="297,120 303,120 300,125"/><text x="304" y="118">mg</text>
+  </g>
+  <g class="sk-force sk-f-air9">
+    <line x1="300" y1="105" x2="300" y2="117"/><polygon points="297,116 303,116 300,121"/><text x="304" y="114">mg</text>
+  </g>
+  <g class="sk-force sk-f-air10">
+    <line x1="300" y1="101" x2="300" y2="113"/><polygon points="297,112 303,112 300,117"/><text x="304" y="110">mg</text>
+  </g>
+  <g class="sk-force sk-f-air11">
+    <line x1="300" y1="111" x2="300" y2="123"/><polygon points="297,122 303,122 300,127"/><text x="304" y="120">mg</text>
+  </g>
+  <g class="sk-force sk-f-air12">
+    <line x1="300" y1="103" x2="300" y2="115"/><polygon points="297,114 303,114 300,119"/><text x="304" y="112">mg</text>
+  </g>
+  <g class="sk-force sk-f-air13">
+    <line x1="300" y1="99" x2="300" y2="111"/><polygon points="297,110 303,110 300,115"/><text x="304" y="108">mg</text>
+  </g>
+  <g class="sk-force sk-f-air14">
+    <line x1="300" y1="95" x2="300" y2="107"/><polygon points="297,106 303,106 300,111"/><text x="304" y="104">mg</text>
+  </g>
+  <g class="sk-force sk-f-air15">
+    <line x1="300" y1="109" x2="300" y2="121"/><polygon points="297,120 303,120 300,125"/><text x="304" y="118">mg</text>
+  </g>
+  <g class="sk-force sk-f-land">
+    <line x1="279" y1="145" x2="279" y2="135"/><polygon points="276,136 282,136 279,131"/><text x="283" y="143">N</text>
+    <line x1="321" y1="145" x2="321" y2="135"/><polygon points="318,136 324,136 321,131"/><text x="325" y="143">N</text>
   </g>
 </svg>

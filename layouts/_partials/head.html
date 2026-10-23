@@ -15,6 +15,10 @@
 <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
 {{ $js := resources.Get "js/nav-transition.js" | minify | fingerprint }}
 <script defer src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}"></script>
+{{ if eq .Layout "about" }}
+{{ $poker := resources.Get "js/poker.js" | minify | fingerprint }}
+<script defer src="{{ $poker.RelPermalink }}" integrity="{{ $poker.Data.Integrity }}"></script>
+{{ end }}
 
 <meta property="og:type" content="{{ cond .IsHome "website" "article" }}">
 <meta property="og:site_name" content="{{ site.Title }}">

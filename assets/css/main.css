@@ -172,65 +172,47 @@ a:hover { color: var(--accent); }
 
 /* ---------- About ---------- */
 .about-intro { color: var(--ink); }
-.interests { list-style: none; padding: 0; margin: 0; display: grid; gap: 0; max-width: 38rem; }
-.interests > li {
-  font: 500 1.375rem/1.2 var(--mono);
-  letter-spacing: -0.02em;
-  padding: 1rem 0;
-  border-bottom: 1px solid var(--line);
+/* Interest cards: each card spans two rows of a shared subgrid, so the diagram boxes and the titles
+   line up across a row however tall each diagram is. The diagram sits centered in its box. */
+@media (min-width: 48rem) {
+  .interests { grid-template-rows: auto auto; row-gap: 0; }
+  .interest { display: grid; grid-row: span 2; grid-template-rows: subgrid; }
+  .interest + .interest + .interest { margin-top: clamp(1.5rem, 4vw, 2.5rem); }
 }
-.interests > li::before { content: "> "; color: var(--accent); }
-
-/* Expandable interests: native <details>, the prompt and [+]/[-] live on the summary */
-.interests { interpolate-size: allow-keywords; }
-.interest::before { display: none; }
-.interest summary { display: flex; cursor: pointer; list-style: none; }
-.interest summary::-webkit-details-marker { display: none; }
-.interest summary::before { content: "> "; white-space: pre; color: var(--accent); }
-.interest summary::after { content: "[+]"; margin-left: auto; padding-inline: 0.125rem; font-weight: 400; color: var(--muted); }
-.interest details[open] summary::after { content: "[-]"; color: var(--accent); }
-@media (hover: hover) and (pointer: fine) {
-  .interest summary { transition: color 160ms ease; }
-  .interest summary:hover { color: var(--accent); }
+.interest-fig {
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: 1.25rem;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  font: 400 0.9375rem/1.6 var(--mono);
+  color: var(--muted);
 }
-/* Panels open with a scanline: a red line sweeps down and the content is revealed behind it.
-   The height eases open where ::details-content is supported (and eases shut); the clip wipe on the
-   body gives the same reveal everywhere else, e.g. Safari. All three share one duration and curve. */
-.interest details::details-content {
-  block-size: 0;
-  overflow: hidden;
-  transition: block-size 420ms var(--ease-out), content-visibility 420ms allow-discrete;
-}
-.interest details[open]::details-content { block-size: auto; }
-
-.interest-body { font: 400 0.9375rem/1.6 var(--mono); letter-spacing: 0; color: var(--muted); padding-top: 1.25rem; }
-.interest-body > * { margin: 0 0 1.25rem; }
-.interest-body > :last-child { margin-bottom: 0.25rem; }
-@keyframes panel-reveal { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0); } }
-/* The line is the bottom edge of a full-height box sliding from above the panel to its bottom,
-   so it rides exactly on the clip edge */
-@keyframes scanline { from { transform: translateY(-100%); opacity: 1; } 80% { opacity: 1; } to { transform: none; opacity: 0; } }
-.interest-body { position: relative; }
-.interest details[open] .interest-body { animation: panel-reveal 420ms var(--ease-out); }
-.interest details[open] .interest-body::after {
-  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0;
-  border-bottom: 2px solid var(--accent);
-  animation: scanline 420ms var(--ease-out);
-}
-
-.interest-facts { display: grid; grid-template-columns: max-content 1fr; gap: 0.5rem 1.5rem; }
-.interest-facts div { display: contents; }
-.interest-facts dt { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.6rem; }
-.interest-facts dd { margin: 0; color: var(--ink); }
-.wip { font-size: 0.6875rem; letter-spacing: 0.08em; color: var(--accent); border: 1px solid var(--accent); padding: 0.1em 0.4em; margin-left: 0.5em; vertical-align: 0.1em; }
-
-.process { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.25rem 1.5rem; }
-.process span { color: var(--accent); }
-
-/* Diagram box shared by the interest panels */
-.interest-fig { border: 1px solid var(--line); background: var(--surface); padding: 1rem; }
-.interest-fig figcaption { font-size: 0.8125rem; margin-top: 0.75rem; }
+.interest-fig > * { width: 100%; }
 .interest-fig svg { display: block; width: 100%; height: auto; }
+/* The chess board scales with its box by default, which makes it oversized in a half-width card */
+.interest-fig .kt-board { grid-template-columns: auto minmax(0, 14rem); }
+/* With a mouse, the diagrams hold still and dimmed like the project covers, and play while their card is hovered.
+   Touch screens show one or two cards at a time, so there they just play.
+   play-state needs !important: each diagram sets its own animation shorthand with more specific selectors, which resets it. */
+@media (hover: hover) and (pointer: fine) {
+  .interest-fig > * { filter: grayscale(0.7) brightness(0.85); transition: filter 200ms ease; }
+  .interest-fig *, .interest-fig *::before, .interest-fig *::after { animation-play-state: paused !important; }
+  .interest:hover .interest-fig > * { filter: none; }
+  .interest:hover .interest-fig *, .interest:hover .interest-fig *::before, .interest:hover .interest-fig *::after { animation-play-state: running !important; }
+  .interest h3 { text-decoration: underline transparent 1px; text-underline-offset: 0.15em; transition: text-decoration-color 0.2s var(--ease); }
+  .interest:hover h3 { text-decoration-color: var(--accent); }
+}
+/* Start the poker loop 1.5s in, so its resting frame shows both hands dealt instead of an empty table.
+   Every part shares the offset, so they stay in sync. */
+.interest-fig .pk * { animation-delay: -1.5s; }
+/* Likewise the skater rests 1.2s in, on the pop frame, so the still is a force diagram (F on the tail, N from the ground) */
+.interest-fig .skate-svg * { animation-delay: -1.2s; }
+/* The number sits inline before the title, on its baseline, instead of on a line of its own */
+/* inline-block keeps the hover underline on the title only */
+.interest h3 .card-num { display: inline-block; margin-right: 0.75rem; vertical-align: 0.35em; }
+.wip { font-size: 0.6875rem; letter-spacing: 0.08em; color: var(--accent); border: 1px solid var(--accent); padding: 0.1em 0.4em; margin-left: 0.5em; }
 
 /* Granular diagram: grain windows hop across the source in held frames; a playhead plays them back out */
 .gr-label { font: 500 11px var(--mono); letter-spacing: 0.08em; fill: var(--muted); }
@@ -261,204 +243,347 @@ a:hover { color: var(--accent); }
 .gr-out polyline:nth-child(11) { animation-delay: 2.07s; }
 .gr-out polyline:nth-child(12) { animation-delay: 2.25s; }
 
-/* Skate diagram: a boxy skater runs ollie, kickflip, pop shuvit, 360 flip, one per 2s, at ~10fps.
-   Every part shares one 8s clock and keyframe percentages; each keyframe is held for its frame (steps(1)).
+/* Skate diagram: a boxy skater runs ollie, kickflip, pop shuvit, 360 flip, one per 4.7s.
+   Each trick plays in slow motion (4x, ~2.5fps) between normal-speed stretches of rolling, so the force arrows can be read.
+   Every part shares one 18.8s clock and keyframe percentages; each keyframe is held for its frame (steps(1)).
    Board: scaleY(-1) is a flip along its length, scaleX through 0 is a flat spin. Generated, not hand-edited. */
 .sk-legs, .sk-board, .sk-shadow { transform-box: fill-box; }
-.sk-legs { transform-origin: bottom; animation: sk-legs 8s steps(1, end) infinite; }
-.sk-upper { animation: sk-upper 8s steps(1, end) infinite; }
-.sk-board { transform-origin: center; animation: sk-board 8s steps(1, end) infinite; }
-.sk-shadow { transform-origin: center; animation: sk-shadow 8s steps(1, end) infinite; }
+.sk-legs { transform-origin: bottom; animation: sk-legs 18.8s steps(1, end) infinite; }
+.sk-upper { animation: sk-upper 18.8s steps(1, end) infinite; }
+.sk-board { transform-origin: center; animation: sk-board 18.8s steps(1, end) infinite; }
+.sk-shadow { transform-origin: center; animation: sk-shadow 18.8s steps(1, end) infinite; }
 .sk-body rect { fill: var(--ink); }
 .sk-grip { fill: var(--ink); }
 .sk-graphic { fill: var(--accent); }
 .sk-wheels rect { fill: var(--muted); }
 .sk-shadow { fill: var(--line); }
-.sk-ground { stroke: var(--muted); stroke-width: 0.75; stroke-dasharray: 8 12; animation: sk-ground 0.4s steps(4, end) infinite; }
+/* Trick name in the top-left corner, one per quarter of the clock (the slow-motion warp keeps trick boundaries at 25%) */
+.sk-names text { font: 500 5px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; fill: var(--muted); animation: 18.8s steps(1, end) infinite; }
+.sk-names text:not(:first-child) { visibility: hidden; }
+@keyframes sk-name-1 { 0% { visibility: visible; } 25%, 100% { visibility: hidden; } }
+@keyframes sk-name-2 { 0% { visibility: hidden; } 25% { visibility: visible; } 50%, 100% { visibility: hidden; } }
+@keyframes sk-name-3 { 0% { visibility: hidden; } 50% { visibility: visible; } 75%, 100% { visibility: hidden; } }
+@keyframes sk-name-4 { 0% { visibility: hidden; } 75%, 100% { visibility: visible; } }
+.sk-names text:nth-child(1) { animation-name: sk-name-1; }
+.sk-names text:nth-child(2) { animation-name: sk-name-2; }
+.sk-names text:nth-child(3) { animation-name: sk-name-3; }
+.sk-names text:nth-child(4) { animation-name: sk-name-4; }
+/* Force arrows, each shown only for its held frames on the skater's clock. The mg arrow has one copy per airborne frame, placed under the board. */
+.sk-force { visibility: hidden; animation: 18.8s steps(1, end) infinite; }
+.sk-force line { stroke: var(--accent); stroke-width: 1; }
+.sk-force polygon { fill: var(--accent); }
+.sk-force text { font: 500 6px var(--mono); fill: var(--ink); }
+@keyframes sk-f-pop {
+  0% { visibility: hidden; }
+  5.3191% { visibility: visible; }
+  7.4468% { visibility: hidden; }
+  30.3191% { visibility: visible; }
+  32.4468% { visibility: hidden; }
+  55.3191% { visibility: visible; }
+  57.4468% { visibility: hidden; }
+  80.3191% { visibility: visible; }
+  82.4468%, 100% { visibility: hidden; }
+}
+.sk-f-pop { animation-name: sk-f-pop; }
+@keyframes sk-f-slide1 {
+  0% { visibility: hidden; }
+  7.4468% { visibility: visible; }
+  9.5745%, 100% { visibility: hidden; }
+}
+.sk-f-slide1 { animation-name: sk-f-slide1; }
+@keyframes sk-f-slide2 {
+  0% { visibility: hidden; }
+  9.5745% { visibility: visible; }
+  11.7021%, 100% { visibility: hidden; }
+}
+.sk-f-slide2 { animation-name: sk-f-slide2; }
+@keyframes sk-f-air1 {
+  0% { visibility: hidden; }
+  11.7021% { visibility: visible; }
+  13.8298%, 100% { visibility: hidden; }
+}
+.sk-f-air1 { animation-name: sk-f-air1; }
+@keyframes sk-f-air2 {
+  0% { visibility: hidden; }
+  13.8298% { visibility: visible; }
+  15.9574%, 100% { visibility: hidden; }
+}
+.sk-f-air2 { animation-name: sk-f-air2; }
+@keyframes sk-f-air3 {
+  0% { visibility: hidden; }
+  15.9574% { visibility: visible; }
+  18.0851%, 100% { visibility: hidden; }
+}
+.sk-f-air3 { animation-name: sk-f-air3; }
+@keyframes sk-f-air4 {
+  0% { visibility: hidden; }
+  34.5745% { visibility: visible; }
+  36.7021%, 100% { visibility: hidden; }
+}
+.sk-f-air4 { animation-name: sk-f-air4; }
+@keyframes sk-f-air5 {
+  0% { visibility: hidden; }
+  36.7021% { visibility: visible; }
+  38.8298%, 100% { visibility: hidden; }
+}
+.sk-f-air5 { animation-name: sk-f-air5; }
+@keyframes sk-f-air6 {
+  0% { visibility: hidden; }
+  38.8298% { visibility: visible; }
+  40.9574%, 100% { visibility: hidden; }
+}
+.sk-f-air6 { animation-name: sk-f-air6; }
+@keyframes sk-f-air7 {
+  0% { visibility: hidden; }
+  40.9574% { visibility: visible; }
+  43.0851%, 100% { visibility: hidden; }
+}
+.sk-f-air7 { animation-name: sk-f-air7; }
+@keyframes sk-f-air8 {
+  0% { visibility: hidden; }
+  59.5745% { visibility: visible; }
+  61.7021%, 100% { visibility: hidden; }
+}
+.sk-f-air8 { animation-name: sk-f-air8; }
+@keyframes sk-f-air9 {
+  0% { visibility: hidden; }
+  61.7021% { visibility: visible; }
+  63.8298%, 100% { visibility: hidden; }
+}
+.sk-f-air9 { animation-name: sk-f-air9; }
+@keyframes sk-f-air10 {
+  0% { visibility: hidden; }
+  63.8298% { visibility: visible; }
+  65.9574%, 100% { visibility: hidden; }
+}
+.sk-f-air10 { animation-name: sk-f-air10; }
+@keyframes sk-f-air11 {
+  0% { visibility: hidden; }
+  65.9574% { visibility: visible; }
+  68.0851%, 100% { visibility: hidden; }
+}
+.sk-f-air11 { animation-name: sk-f-air11; }
+@keyframes sk-f-air12 {
+  0% { visibility: hidden; }
+  84.5745% { visibility: visible; }
+  86.7021%, 100% { visibility: hidden; }
+}
+.sk-f-air12 { animation-name: sk-f-air12; }
+@keyframes sk-f-air13 {
+  0% { visibility: hidden; }
+  86.7021% { visibility: visible; }
+  88.8298%, 100% { visibility: hidden; }
+}
+.sk-f-air13 { animation-name: sk-f-air13; }
+@keyframes sk-f-air14 {
+  0% { visibility: hidden; }
+  88.8298% { visibility: visible; }
+  90.9574%, 100% { visibility: hidden; }
+}
+.sk-f-air14 { animation-name: sk-f-air14; }
+@keyframes sk-f-air15 {
+  0% { visibility: hidden; }
+  90.9574% { visibility: visible; }
+  93.0851%, 100% { visibility: hidden; }
+}
+.sk-f-air15 { animation-name: sk-f-air15; }
+@keyframes sk-f-land {
+  0% { visibility: hidden; }
+  18.0851% { visibility: visible; }
+  22.8723% { visibility: hidden; }
+  43.0851% { visibility: visible; }
+  47.8723% { visibility: hidden; }
+  68.0851% { visibility: visible; }
+  72.8723% { visibility: hidden; }
+  93.0851% { visibility: visible; }
+  97.8723%, 100% { visibility: hidden; }
+}
+.sk-f-land { animation-name: sk-f-land; }
+.sk-ground { stroke: var(--muted); stroke-width: 0.75; stroke-dasharray: 8 12; animation: sk-ground 1.6s steps(4, end) infinite; }
 @keyframes sk-ground { to { stroke-dashoffset: 20; } }
 @keyframes sk-legs {
   0% { transform: translateY(0px) scaleY(1); }
-  7.5% { transform: translateY(0px) scaleY(0.6); }
-  8.75% { transform: translateY(-6px) scaleY(0.8); }
-  10% { transform: translateY(-20px) scaleY(0.9); }
-  11.25% { transform: translateY(-28px) scaleY(0.7); }
-  12.5% { transform: translateY(-32px) scaleY(0.65); }
-  13.75% { transform: translateY(-30px) scaleY(0.7); }
-  15% { transform: translateY(-18px) scaleY(0.85); }
-  16.25% { transform: translateY(0px) scaleY(0.6); }
-  17.5% { transform: translateY(0px) scaleY(0.85); }
-  18.75% { transform: translateY(0px) scaleY(1); }
+  3.1915% { transform: translateY(0px) scaleY(0.6); }
+  5.3191% { transform: translateY(-6px) scaleY(0.8); }
+  7.4468% { transform: translateY(-20px) scaleY(0.9); }
+  9.5745% { transform: translateY(-28px) scaleY(0.7); }
+  11.7021% { transform: translateY(-32px) scaleY(0.65); }
+  13.8298% { transform: translateY(-30px) scaleY(0.7); }
+  15.9574% { transform: translateY(-18px) scaleY(0.85); }
+  18.0851% { transform: translateY(0px) scaleY(0.6); }
+  20.2128% { transform: translateY(0px) scaleY(0.85); }
+  22.3404% { transform: translateY(0px) scaleY(1); }
   25% { transform: translateY(0px) scaleY(1); }
-  32.5% { transform: translateY(0px) scaleY(0.6); }
-  33.75% { transform: translateY(-6px) scaleY(0.8); }
-  35% { transform: translateY(-20px) scaleY(0.9); }
-  36.25% { transform: translateY(-30px) scaleY(0.7); }
-  37.5% { transform: translateY(-34px) scaleY(0.65); }
-  38.75% { transform: translateY(-32px) scaleY(0.7); }
-  40% { transform: translateY(-18px) scaleY(0.85); }
-  41.25% { transform: translateY(0px) scaleY(0.6); }
-  42.5% { transform: translateY(0px) scaleY(0.85); }
-  43.75% { transform: translateY(0px) scaleY(1); }
+  28.1915% { transform: translateY(0px) scaleY(0.6); }
+  30.3191% { transform: translateY(-6px) scaleY(0.8); }
+  32.4468% { transform: translateY(-20px) scaleY(0.9); }
+  34.5745% { transform: translateY(-30px) scaleY(0.7); }
+  36.7021% { transform: translateY(-34px) scaleY(0.65); }
+  38.8298% { transform: translateY(-32px) scaleY(0.7); }
+  40.9574% { transform: translateY(-18px) scaleY(0.85); }
+  43.0851% { transform: translateY(0px) scaleY(0.6); }
+  45.2128% { transform: translateY(0px) scaleY(0.85); }
+  47.3404% { transform: translateY(0px) scaleY(1); }
   50% { transform: translateY(0px) scaleY(1); }
-  57.5% { transform: translateY(0px) scaleY(0.6); }
-  58.75% { transform: translateY(-6px) scaleY(0.8); }
-  60% { transform: translateY(-18px) scaleY(0.9); }
-  61.25% { transform: translateY(-26px) scaleY(0.75); }
-  62.5% { transform: translateY(-28px) scaleY(0.7); }
-  63.75% { transform: translateY(-26px) scaleY(0.75); }
-  65% { transform: translateY(-16px) scaleY(0.85); }
-  66.25% { transform: translateY(0px) scaleY(0.6); }
-  67.5% { transform: translateY(0px) scaleY(0.85); }
-  68.75% { transform: translateY(0px) scaleY(1); }
+  53.1915% { transform: translateY(0px) scaleY(0.6); }
+  55.3191% { transform: translateY(-6px) scaleY(0.8); }
+  57.4468% { transform: translateY(-18px) scaleY(0.9); }
+  59.5745% { transform: translateY(-26px) scaleY(0.75); }
+  61.7021% { transform: translateY(-28px) scaleY(0.7); }
+  63.8298% { transform: translateY(-26px) scaleY(0.75); }
+  65.9574% { transform: translateY(-16px) scaleY(0.85); }
+  68.0851% { transform: translateY(0px) scaleY(0.6); }
+  70.2128% { transform: translateY(0px) scaleY(0.85); }
+  72.3404% { transform: translateY(0px) scaleY(1); }
   75% { transform: translateY(0px) scaleY(1); }
-  82.5% { transform: translateY(0px) scaleY(0.6); }
-  83.75% { transform: translateY(-6px) scaleY(0.8); }
-  85% { transform: translateY(-20px) scaleY(0.9); }
-  86.25% { transform: translateY(-30px) scaleY(0.7); }
-  87.5% { transform: translateY(-34px) scaleY(0.65); }
-  88.75% { transform: translateY(-32px) scaleY(0.7); }
-  90% { transform: translateY(-18px) scaleY(0.85); }
-  91.25% { transform: translateY(0px) scaleY(0.6); }
-  92.5% { transform: translateY(0px) scaleY(0.85); }
-  93.75%, 100% { transform: translateY(0px) scaleY(1); }
+  78.1915% { transform: translateY(0px) scaleY(0.6); }
+  80.3191% { transform: translateY(-6px) scaleY(0.8); }
+  82.4468% { transform: translateY(-20px) scaleY(0.9); }
+  84.5745% { transform: translateY(-30px) scaleY(0.7); }
+  86.7021% { transform: translateY(-34px) scaleY(0.65); }
+  88.8298% { transform: translateY(-32px) scaleY(0.7); }
+  90.9574% { transform: translateY(-18px) scaleY(0.85); }
+  93.0851% { transform: translateY(0px) scaleY(0.6); }
+  95.2128% { transform: translateY(0px) scaleY(0.85); }
+  97.3404%, 100% { transform: translateY(0px) scaleY(1); }
 }
 @keyframes sk-upper {
   0% { transform: translateY(0px); }
-  7.5% { transform: translateY(9.6px); }
-  8.75% { transform: translateY(-1.2px); }
-  10% { transform: translateY(-17.6px); }
-  11.25% { transform: translateY(-20.8px); }
-  12.5% { transform: translateY(-23.6px); }
-  13.75% { transform: translateY(-22.8px); }
-  15% { transform: translateY(-14.4px); }
-  16.25% { transform: translateY(9.6px); }
-  17.5% { transform: translateY(3.6px); }
-  18.75% { transform: translateY(0px); }
+  3.1915% { transform: translateY(9.6px); }
+  5.3191% { transform: translateY(-1.2px); }
+  7.4468% { transform: translateY(-17.6px); }
+  9.5745% { transform: translateY(-20.8px); }
+  11.7021% { transform: translateY(-23.6px); }
+  13.8298% { transform: translateY(-22.8px); }
+  15.9574% { transform: translateY(-14.4px); }
+  18.0851% { transform: translateY(9.6px); }
+  20.2128% { transform: translateY(3.6px); }
+  22.3404% { transform: translateY(0px); }
   25% { transform: translateY(0px); }
-  32.5% { transform: translateY(9.6px); }
-  33.75% { transform: translateY(-1.2px); }
-  35% { transform: translateY(-17.6px); }
-  36.25% { transform: translateY(-22.8px); }
-  37.5% { transform: translateY(-25.6px); }
-  38.75% { transform: translateY(-24.8px); }
-  40% { transform: translateY(-14.4px); }
-  41.25% { transform: translateY(9.6px); }
-  42.5% { transform: translateY(3.6px); }
-  43.75% { transform: translateY(0px); }
+  28.1915% { transform: translateY(9.6px); }
+  30.3191% { transform: translateY(-1.2px); }
+  32.4468% { transform: translateY(-17.6px); }
+  34.5745% { transform: translateY(-22.8px); }
+  36.7021% { transform: translateY(-25.6px); }
+  38.8298% { transform: translateY(-24.8px); }
+  40.9574% { transform: translateY(-14.4px); }
+  43.0851% { transform: translateY(9.6px); }
+  45.2128% { transform: translateY(3.6px); }
+  47.3404% { transform: translateY(0px); }
   50% { transform: translateY(0px); }
-  57.5% { transform: translateY(9.6px); }
-  58.75% { transform: translateY(-1.2px); }
-  60% { transform: translateY(-15.6px); }
-  61.25% { transform: translateY(-20px); }
-  62.5% { transform: translateY(-20.8px); }
-  63.75% { transform: translateY(-20px); }
-  65% { transform: translateY(-12.4px); }
-  66.25% { transform: translateY(9.6px); }
-  67.5% { transform: translateY(3.6px); }
-  68.75% { transform: translateY(0px); }
+  53.1915% { transform: translateY(9.6px); }
+  55.3191% { transform: translateY(-1.2px); }
+  57.4468% { transform: translateY(-15.6px); }
+  59.5745% { transform: translateY(-20px); }
+  61.7021% { transform: translateY(-20.8px); }
+  63.8298% { transform: translateY(-20px); }
+  65.9574% { transform: translateY(-12.4px); }
+  68.0851% { transform: translateY(9.6px); }
+  70.2128% { transform: translateY(3.6px); }
+  72.3404% { transform: translateY(0px); }
   75% { transform: translateY(0px); }
-  82.5% { transform: translateY(9.6px); }
-  83.75% { transform: translateY(-1.2px); }
-  85% { transform: translateY(-17.6px); }
-  86.25% { transform: translateY(-22.8px); }
-  87.5% { transform: translateY(-25.6px); }
-  88.75% { transform: translateY(-24.8px); }
-  90% { transform: translateY(-14.4px); }
-  91.25% { transform: translateY(9.6px); }
-  92.5% { transform: translateY(3.6px); }
-  93.75%, 100% { transform: translateY(0px); }
+  78.1915% { transform: translateY(9.6px); }
+  80.3191% { transform: translateY(-1.2px); }
+  82.4468% { transform: translateY(-17.6px); }
+  84.5745% { transform: translateY(-22.8px); }
+  86.7021% { transform: translateY(-25.6px); }
+  88.8298% { transform: translateY(-24.8px); }
+  90.9574% { transform: translateY(-14.4px); }
+  93.0851% { transform: translateY(9.6px); }
+  95.2128% { transform: translateY(3.6px); }
+  97.3404%, 100% { transform: translateY(0px); }
 }
 @keyframes sk-board {
   0% { transform: translateY(0px) rotate(0deg) scale(1, 1); }
-  7.5% { transform: translateY(0px) rotate(0deg) scale(1, 1); }
-  8.75% { transform: translateY(-4px) rotate(-18deg) scale(1, 1); }
-  10% { transform: translateY(-20px) rotate(-6deg) scale(1, 1); }
-  11.25% { transform: translateY(-28px) rotate(0deg) scale(1, 1); }
-  12.5% { transform: translateY(-32px) rotate(3deg) scale(1, 1); }
-  13.75% { transform: translateY(-30px) rotate(2deg) scale(1, 1); }
-  15% { transform: translateY(-18px) rotate(0deg) scale(1, 1); }
-  16.25% { transform: translateY(0px) rotate(0deg) scale(1, 1); }
-  17.5% { transform: translateY(0px) rotate(0deg) scale(1, 1); }
-  18.75% { transform: translateY(0px) rotate(0deg) scale(1, 1); }
+  3.1915% { transform: translateY(0px) rotate(0deg) scale(1, 1); }
+  5.3191% { transform: translateY(-4px) rotate(-18deg) scale(1, 1); }
+  7.4468% { transform: translateY(-20px) rotate(-6deg) scale(1, 1); }
+  9.5745% { transform: translateY(-28px) rotate(0deg) scale(1, 1); }
+  11.7021% { transform: translateY(-32px) rotate(3deg) scale(1, 1); }
+  13.8298% { transform: translateY(-30px) rotate(2deg) scale(1, 1); }
+  15.9574% { transform: translateY(-18px) rotate(0deg) scale(1, 1); }
+  18.0851% { transform: translateY(0px) rotate(0deg) scale(1, 1); }
+  20.2128% { transform: translateY(0px) rotate(0deg) scale(1, 1); }
+  22.3404% { transform: translateY(0px) rotate(0deg) scale(1, 1); }
   25% { transform: translateY(0px) rotate(0deg) scale(1, 1); }
-  32.5% { transform: translateY(0px) rotate(0deg) scale(1, 1); }
-  33.75% { transform: translateY(-4px) rotate(-18deg) scale(1, 1); }
-  35% { transform: translateY(-16px) rotate(-8deg) scale(1, 0.35); }
-  36.25% { transform: translateY(-24px) rotate(0deg) scale(1, -1); }
-  37.5% { transform: translateY(-28px) rotate(0deg) scale(1, -0.35); }
-  38.75% { transform: translateY(-32px) rotate(0deg) scale(1, 1); }
-  40% { transform: translateY(-18px) rotate(0deg) scale(1, 1); }
-  41.25% { transform: translateY(0px) rotate(0deg) scale(1, 1); }
-  42.5% { transform: translateY(0px) rotate(0deg) scale(1, 1); }
-  43.75% { transform: translateY(0px) rotate(0deg) scale(1, 1); }
+  28.1915% { transform: translateY(0px) rotate(0deg) scale(1, 1); }
+  30.3191% { transform: translateY(-4px) rotate(-18deg) scale(1, 1); }
+  32.4468% { transform: translateY(-16px) rotate(-8deg) scale(1, 0.35); }
+  34.5745% { transform: translateY(-24px) rotate(0deg) scale(1, -1); }
+  36.7021% { transform: translateY(-28px) rotate(0deg) scale(1, -0.35); }
+  38.8298% { transform: translateY(-32px) rotate(0deg) scale(1, 1); }
+  40.9574% { transform: translateY(-18px) rotate(0deg) scale(1, 1); }
+  43.0851% { transform: translateY(0px) rotate(0deg) scale(1, 1); }
+  45.2128% { transform: translateY(0px) rotate(0deg) scale(1, 1); }
+  47.3404% { transform: translateY(0px) rotate(0deg) scale(1, 1); }
   50% { transform: translateY(0px) rotate(0deg) scale(1, 1); }
-  57.5% { transform: translateY(0px) rotate(0deg) scale(1, 1); }
-  58.75% { transform: translateY(-4px) rotate(-18deg) scale(1, 1); }
-  60% { transform: translateY(-12px) rotate(-4deg) scale(0.6, 1); }
-  61.25% { transform: translateY(-18px) rotate(0deg) scale(0.1, 1); }
-  62.5% { transform: translateY(-22px) rotate(0deg) scale(-0.6, 1); }
-  63.75% { transform: translateY(-26px) rotate(0deg) scale(-1, 1); }
-  65% { transform: translateY(-16px) rotate(0deg) scale(-1, 1); }
-  66.25% { transform: translateY(0px) rotate(0deg) scale(-1, 1); }
-  67.5% { transform: translateY(0px) rotate(0deg) scale(-1, 1); }
-  68.75% { transform: translateY(0px) rotate(0deg) scale(-1, 1); }
+  53.1915% { transform: translateY(0px) rotate(0deg) scale(1, 1); }
+  55.3191% { transform: translateY(-4px) rotate(-18deg) scale(1, 1); }
+  57.4468% { transform: translateY(-12px) rotate(-4deg) scale(0.6, 1); }
+  59.5745% { transform: translateY(-18px) rotate(0deg) scale(0.1, 1); }
+  61.7021% { transform: translateY(-22px) rotate(0deg) scale(-0.6, 1); }
+  63.8298% { transform: translateY(-26px) rotate(0deg) scale(-1, 1); }
+  65.9574% { transform: translateY(-16px) rotate(0deg) scale(-1, 1); }
+  68.0851% { transform: translateY(0px) rotate(0deg) scale(-1, 1); }
+  70.2128% { transform: translateY(0px) rotate(0deg) scale(-1, 1); }
+  72.3404% { transform: translateY(0px) rotate(0deg) scale(-1, 1); }
   75% { transform: translateY(0px) rotate(0deg) scale(1, 1); }
-  82.5% { transform: translateY(0px) rotate(0deg) scale(1, 1); }
-  83.75% { transform: translateY(-4px) rotate(-18deg) scale(1, 1); }
-  85% { transform: translateY(-16px) rotate(-8deg) scale(0.6, 0.4); }
-  86.25% { transform: translateY(-24px) rotate(0deg) scale(0.1, -1); }
-  87.5% { transform: translateY(-28px) rotate(0deg) scale(-0.6, -0.4); }
-  88.75% { transform: translateY(-32px) rotate(0deg) scale(-1, 1); }
-  90% { transform: translateY(-18px) rotate(0deg) scale(-1, 1); }
-  91.25% { transform: translateY(0px) rotate(0deg) scale(-1, 1); }
-  92.5% { transform: translateY(0px) rotate(0deg) scale(-1, 1); }
-  93.75%, 100% { transform: translateY(0px) rotate(0deg) scale(-1, 1); }
+  78.1915% { transform: translateY(0px) rotate(0deg) scale(1, 1); }
+  80.3191% { transform: translateY(-4px) rotate(-18deg) scale(1, 1); }
+  82.4468% { transform: translateY(-16px) rotate(-8deg) scale(0.6, 0.4); }
+  84.5745% { transform: translateY(-24px) rotate(0deg) scale(0.1, -1); }
+  86.7021% { transform: translateY(-28px) rotate(0deg) scale(-0.6, -0.4); }
+  88.8298% { transform: translateY(-32px) rotate(0deg) scale(-1, 1); }
+  90.9574% { transform: translateY(-18px) rotate(0deg) scale(-1, 1); }
+  93.0851% { transform: translateY(0px) rotate(0deg) scale(-1, 1); }
+  95.2128% { transform: translateY(0px) rotate(0deg) scale(-1, 1); }
+  97.3404%, 100% { transform: translateY(0px) rotate(0deg) scale(-1, 1); }
 }
 @keyframes sk-shadow {
   0% { transform: scaleX(1); }
-  7.5% { transform: scaleX(1); }
-  8.75% { transform: scaleX(0.93); }
-  10% { transform: scaleX(0.62); }
-  11.25% { transform: scaleX(0.48); }
-  12.5% { transform: scaleX(0.4); }
-  13.75% { transform: scaleX(0.44); }
-  15% { transform: scaleX(0.66); }
-  16.25% { transform: scaleX(1); }
-  17.5% { transform: scaleX(1); }
-  18.75% { transform: scaleX(1); }
+  3.1915% { transform: scaleX(1); }
+  5.3191% { transform: scaleX(0.93); }
+  7.4468% { transform: scaleX(0.62); }
+  9.5745% { transform: scaleX(0.48); }
+  11.7021% { transform: scaleX(0.4); }
+  13.8298% { transform: scaleX(0.44); }
+  15.9574% { transform: scaleX(0.66); }
+  18.0851% { transform: scaleX(1); }
+  20.2128% { transform: scaleX(1); }
+  22.3404% { transform: scaleX(1); }
   25% { transform: scaleX(1); }
-  32.5% { transform: scaleX(1); }
-  33.75% { transform: scaleX(0.93); }
-  35% { transform: scaleX(0.7); }
-  36.25% { transform: scaleX(0.55); }
-  37.5% { transform: scaleX(0.47); }
-  38.75% { transform: scaleX(0.4); }
-  40% { transform: scaleX(0.66); }
-  41.25% { transform: scaleX(1); }
-  42.5% { transform: scaleX(1); }
-  43.75% { transform: scaleX(1); }
+  28.1915% { transform: scaleX(1); }
+  30.3191% { transform: scaleX(0.93); }
+  32.4468% { transform: scaleX(0.7); }
+  34.5745% { transform: scaleX(0.55); }
+  36.7021% { transform: scaleX(0.47); }
+  38.8298% { transform: scaleX(0.4); }
+  40.9574% { transform: scaleX(0.66); }
+  43.0851% { transform: scaleX(1); }
+  45.2128% { transform: scaleX(1); }
+  47.3404% { transform: scaleX(1); }
   50% { transform: scaleX(1); }
-  57.5% { transform: scaleX(1); }
-  58.75% { transform: scaleX(0.93); }
-  60% { transform: scaleX(0.78); }
-  61.25% { transform: scaleX(0.66); }
-  62.5% { transform: scaleX(0.59); }
-  63.75% { transform: scaleX(0.51); }
-  65% { transform: scaleX(0.7); }
-  66.25% { transform: scaleX(1); }
-  67.5% { transform: scaleX(1); }
-  68.75% { transform: scaleX(1); }
+  53.1915% { transform: scaleX(1); }
+  55.3191% { transform: scaleX(0.93); }
+  57.4468% { transform: scaleX(0.78); }
+  59.5745% { transform: scaleX(0.66); }
+  61.7021% { transform: scaleX(0.59); }
+  63.8298% { transform: scaleX(0.51); }
+  65.9574% { transform: scaleX(0.7); }
+  68.0851% { transform: scaleX(1); }
+  70.2128% { transform: scaleX(1); }
+  72.3404% { transform: scaleX(1); }
   75% { transform: scaleX(1); }
-  82.5% { transform: scaleX(1); }
-  83.75% { transform: scaleX(0.93); }
-  85% { transform: scaleX(0.7); }
-  86.25% { transform: scaleX(0.55); }
-  87.5% { transform: scaleX(0.47); }
-  88.75% { transform: scaleX(0.4); }
-  90% { transform: scaleX(0.66); }
-  91.25% { transform: scaleX(1); }
-  92.5% { transform: scaleX(1); }
-  93.75%, 100% { transform: scaleX(1); }
+  78.1915% { transform: scaleX(1); }
+  80.3191% { transform: scaleX(0.93); }
+  82.4468% { transform: scaleX(0.7); }
+  84.5745% { transform: scaleX(0.55); }
+  86.7021% { transform: scaleX(0.47); }
+  88.8298% { transform: scaleX(0.4); }
+  90.9574% { transform: scaleX(0.66); }
+  93.0851% { transform: scaleX(1); }
+  95.2128% { transform: scaleX(1); }
+  97.3404%, 100% { transform: scaleX(1); }
 }
 
 /* Poker runouts: hero AsKs vs villain QhQd, all-in preflop, five boards in rotation. Equities are exact enumerations (preflop by simulation). One 10s clock; every keyframe is held for its frame (steps(1)). */
@@ -727,6 +852,42 @@ a:hover { color: var(--accent); }
   94%, 100% { opacity: 0; transform: none; }
 }
 .pk-pct > :nth-child(4) { animation-name: pk-eq-river; }
+
+/* Live poker (assets/js/poker.js): the same rows, cards and bar as the demo, with a 52-card picker under them.
+   None of the demo's keyframes apply here; cards drop in with a held-frame WAAPI animation instead. */
+.pk-live, .pk-live * { animation: none !important; }
+.pk-live[hidden], .pk[hidden] { display: none; }
+.pk-live .pk-street { grid-column: 1 / 4; }
+.pk-live .pk-pct { min-height: 1.3em; }
+.pk-live .pk-winner .pk-pct:not(.pk-type) { color: var(--accent); }
+.pk-live .pk-bar span { transform: scaleX(0); }
+.pk-seat { padding: 0; font: inherit; font-size: 1rem; cursor: pointer; }
+.pk-seat.pk-empty { border-style: dashed; border-color: var(--line); }
+.pk-seat.pk-next { border-color: var(--accent); }
+.pk-picker { display: grid; grid-template-columns: repeat(13, minmax(0, 1fr)); gap: 2px; }
+.pk-picker[hidden] { display: none; }
+.pk-pick {
+  padding: 0.375rem 0; font: 0.6875rem/1 var(--mono); color: var(--ink); text-align: center;
+  background: var(--bg); border: 1px solid var(--line); cursor: pointer;
+}
+.pk-pick.red { color: var(--accent); }
+.pk-pick:disabled { opacity: 0.2; cursor: default; }
+@media (hover: hover) and (pointer: fine) {
+  .pk-pick:not(:disabled):hover, .pk-seat:hover { border-color: var(--accent); }
+}
+.pk-controls { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.pk-controls[hidden] { display: none; }
+.pk-status { margin: 0; min-height: 1.3em; font-size: 0.75rem; color: var(--muted); }
+.pk-btn {
+  font: 0.75rem/1 var(--mono); color: var(--ink); background: none; cursor: pointer;
+  padding: 0.5rem 0.75rem; border: 1px solid var(--line);
+  transition: border-color 160ms ease, color 160ms ease;
+}
+.pk-btn:hover { border-color: var(--accent); }
+.pk-toggle { margin-top: 0.25rem; }
+.pk-toggle[hidden] { display: none; }
+/* The live card is in use, so it stays lit instead of resting dimmed like the other diagrams */
+.interest.is-live .interest-fig > * { filter: none; }
 
 /* Three tactics from game positions, one after another on an 18s clock: a knight fork, a back-rank
    mate and a pin. Each board runs on its own 6s beat with held frames (steps(1)): the piece moves,
