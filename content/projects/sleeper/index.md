@@ -13,7 +13,7 @@ coverAlt: Searching for five albums in Sleeper and getting one niche recommendat
 
 ## Problem
 
-Most recommenders are either inaccurate or keep pointing you at the most popular picks. Sleeper is built to find "sleeper picks": pick 5 albums you like and get 1 niche album to play next plus 4 runners-up, each with a one-line reason built from a scoring index.
+Most music recommenders are either inaccurate or point you towards already well known albums. Sleeper is built to find "sleeper picks": pick 5 albums you like and get 1 niche album to play next plus 4 runners-up, each with a one-line reason built from a scoring index.
 
 ## Approach
 
@@ -29,4 +29,4 @@ Every API call goes through a SQLite cache and a per-API rate limiter, and picks
 
 ## Result
 
-It's live, with CI and a pytest suite. A leave-one-out evaluation gives a **45%** album hit rate in the top 20, against **47%** for a naive similar-artists baseline. That gap is the point: the evaluation rewards predicting albums you already like, and the popularity penalty deliberately trades a little of that for picks you don't know yet.
+A leave-one-out evaluation gives a **45%** album hit rate in the top 20, against **47%** for a naive similar-artists baseline. The reason this gap exists is because the evaluation rewards predicting albums you already like, and the popularity penalty deliberately trades a little of that score for less well known picks.
