@@ -21,7 +21,7 @@ Security analysts spend a lot of time checking alerts and suspicious emails. An 
 
 ## Approach
 
-First, plain code scans the input for red flags like lookalike domains, hidden text, and instructions aimed at the AI. Then Claude reads it and gives a verdict, with the input clearly marked as untrusted.
+First, plain code scans the input for red flags like lookalike domains, hidden text, and instructions aimed at the AI. Then Claude reads it and gives a verdict, with this specific input marked as untrusted.
 
 After that, code checks the answer:
 
