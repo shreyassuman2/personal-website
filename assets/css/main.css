@@ -842,7 +842,7 @@ a:hover { color: var(--accent); }
 .hero > :nth-child(5), .page-head > :nth-child(5) { animation-delay: calc(5 * var(--beat)); }
 /* The big title wipes on left to right, like a line being written */
 .hero .display, .page-head .display { animation: wipe 600ms var(--ease-out) calc(1 * var(--beat)) backwards; }
-/* Home: the name slides in at ~16fps, brightening from black to white as it lands.
+/* Home name and project titles: slide in at ~16fps, brightening from black to white as they land.
    Each keyframe is held for one frame (steps(1)), and the gaps between keyframes shrink,
    so it decelerates like an ease-out, but in jumps. */
 @keyframes slide-frames {
@@ -858,11 +858,10 @@ a:hover { color: var(--accent); }
   81.82%        { transform: none; color: color-mix(in srgb, var(--ink) 94%, var(--bg)); }
   90.91%, 100%  { transform: none; color: var(--ink); }
 }
-.hero .display { animation: slide-frames 700ms steps(1, end) calc(1 * var(--beat)) backwards; }
+.hero .display, .project .page-head .display { animation: slide-frames 700ms steps(1, end) calc(1 * var(--beat)) backwards; }
 /* Everything below the header lands last */
 main > section + section, .facts, .cover { animation: boot 400ms var(--ease-out) calc(6 * var(--beat)) backwards; }
 .label::after { transform-origin: left; animation: rule 700ms var(--ease-out) calc(8 * var(--beat)) backwards; }
-
 /* Block cursor after terminal prompts */
 .eyebrow:has(.prompt)::after {
   content: "";
