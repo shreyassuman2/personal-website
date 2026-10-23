@@ -172,6 +172,7 @@ a:hover { color: var(--accent); }
 
 /* ---------- About ---------- */
 .about-intro { color: var(--ink); }
+.about-intro p + p { margin-top: 0.75em; }
 /* Interest cards: each card spans two rows of a shared subgrid, so the diagram boxes and the titles
    line up across a row however tall each diagram is. The diagram sits centered in its box. */
 @media (min-width: 48rem) {
