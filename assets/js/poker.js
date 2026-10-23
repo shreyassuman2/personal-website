@@ -202,8 +202,8 @@ function build(card) {
   }
 
   const controls = el('div', 'pk-controls');
-  const again = el('button', 'pk-btn', 'Deal again');
-  const reset = el('button', 'pk-btn', 'New hands');
+  const again = el('button', 'card-btn', 'Deal again');
+  const reset = el('button', 'card-btn', 'New hands');
   again.type = reset.type = 'button';
   controls.append(again, reset);
   controls.hidden = true;

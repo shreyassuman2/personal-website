@@ -879,14 +879,16 @@ a:hover { color: var(--accent); }
 .pk-controls { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .pk-controls[hidden] { display: none; }
 .pk-status { margin: 0; min-height: 1.3em; font-size: 0.75rem; color: var(--muted); }
-.pk-btn {
+.card-btn {
   font: 0.75rem/1 var(--mono); color: var(--ink); background: none; cursor: pointer;
   padding: 0.5rem 0.75rem; border: 1px solid var(--line);
   transition: border-color 160ms ease, color 160ms ease;
 }
-.pk-btn:hover { border-color: var(--accent); }
-.pk-toggle { margin-top: 0.25rem; }
-.pk-toggle[hidden] { display: none; }
+.card-btn:hover { border-color: var(--accent); }
+.pk-toggle, .kt-toggle { margin-top: 0.25rem; }
+.card-btn[hidden] { display: none; }
+.card-note { margin-left: 0.75rem; font: 0.6875rem/1 var(--mono); color: var(--muted); }
+.card-note[hidden] { display: none; }
 /* The live card is in use, so it stays lit instead of resting dimmed like the other diagrams */
 .interest.is-live .interest-fig > * { filter: none; }
 
@@ -948,6 +950,21 @@ a:hover { color: var(--accent); }
 @keyframes kt-hit-3 { 0% { color: var(--muted); box-shadow: none; } 48% { color: var(--bg); box-shadow: inset 0 0 0 10rem var(--accent); } 92%, 100% { color: var(--muted); box-shadow: none; } }
 @keyframes kt-hit-4 { 0% { color: var(--muted); box-shadow: none; } 55% { color: var(--bg); box-shadow: inset 0 0 0 10rem var(--accent); } 92%, 100% { color: var(--muted); box-shadow: none; } }
 
+/* Chess puzzles (assets/js/chess.js): a playable board in the same frame and pieces, squares are buttons */
+.kt-board[hidden], .kt-live[hidden] { display: none; }
+.kt-live { display: grid; gap: 0.75rem; font-family: var(--mono); }
+.kt-head { margin: 0; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); }
+.kt.kt-play { visibility: visible; animation: none; }
+.kt-play .kt-sq { padding: 0; border: 0; font: inherit; cursor: pointer; }
+.kt-play .kt-sq.kt-last { box-shadow: inset 0 0 0 2px var(--muted); }
+.kt-play .kt-sq.kt-sel { box-shadow: inset 0 0 0 2px var(--accent); }
+/* The mated king: the same solid red square as the forked pieces in the animation */
+.kt-play .kt-sq.kt-mate { color: var(--bg); box-shadow: inset 0 0 0 10rem var(--accent); }
+.kt-play .kt-sq.kt-mate .kt-pc { color: var(--bg); }
+@keyframes kt-miss { 0%, 50% { box-shadow: inset 0 0 0 2px var(--accent); } 25%, 75%, 100% { box-shadow: none; } }
+.kt-play .kt-sq.kt-miss { animation: kt-miss 480ms steps(1, end); }
+.kt-status { margin: 0; min-height: 1.3em; font-size: 0.75rem; color: var(--muted); }
+.kt-controls { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 
 /* ---------- Project page ---------- */
 .page-head { padding-block: clamp(2rem, 8vw, 5rem) 2.5rem; }

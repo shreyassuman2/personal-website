@@ -24,13 +24,16 @@
       <div class="card-body">
         <h3><span class="card-num">02</span>Playing poker</h3>
         {{/* Shown by assets/js/poker.js, which builds the live hand picker */}}
-        <button class="pk-btn pk-toggle" type="button" aria-expanded="false" hidden>Pick your own hands</button>
+        <button class="card-btn pk-toggle" type="button" aria-expanded="false" hidden>Pick your own hands</button>
       </div>
     </li>
     <li class="card interest">
       <figure class="interest-fig">{{ partial "chess.html" . }}</figure>
       <div class="card-body">
         <h3><span class="card-num">03</span>Chess</h3>
+        {{/* Shown by assets/js/chess.js, which builds the puzzle board */}}
+        <button class="card-btn kt-toggle" type="button" aria-expanded="false" hidden>Try a puzzle</button>
+        <span class="card-note kt-note" hidden>May be buggy on mobile</span>
       </div>
     </li>
     <li class="card interest">

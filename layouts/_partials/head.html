@@ -18,6 +18,8 @@
 {{ if eq .Layout "about" }}
 {{ $poker := resources.Get "js/poker.js" | minify | fingerprint }}
 <script defer src="{{ $poker.RelPermalink }}" integrity="{{ $poker.Data.Integrity }}"></script>
+{{ $chess := resources.Get "js/chess.js" | minify | fingerprint }}
+<script defer src="{{ $chess.RelPermalink }}" integrity="{{ $chess.Data.Integrity }}"></script>
 {{ end }}
 
 <meta property="og:type" content="{{ cond .IsHome "website" "article" }}">
