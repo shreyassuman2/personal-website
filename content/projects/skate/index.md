@@ -2,6 +2,7 @@
 title: First Try
 kicker: In progress
 status: wip
+titleBoard: true
 date: 2026-10-30
 weight: 3
 summary: An iOS app that watches a clip of you skating, names the trick, and tells you what to fix.

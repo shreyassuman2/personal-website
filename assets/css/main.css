@@ -1041,6 +1041,78 @@ a:hover { color: var(--accent); }
   90.91%, 100%  { transform: none; color: var(--ink); }
 }
 .hero .display, .project .page-head .display { animation: slide-frames 700ms steps(1, end) calc(1 * var(--beat)) backwards; }
+/* Mini board after a project title (layouts/_partials/title-board.html): rolls in from the right as the title slides in
+   from the left, pops a kickflip whose spin slows on the way down, lands with a squash and parks. Same ~16fps held frames
+   (25 frames over 1.6s); click replays it (assets/js/title-board.js). Black and white: the grip follows the title's colour. */
+.project .page-head { overflow-x: clip; }
+.tb { display: inline-block; width: 1.4em; margin-left: 0.3em; vertical-align: 0.02em; cursor: pointer; }
+.tb:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.tb-air { display: block; }
+.tb svg { display: block; width: 100%; height: auto; overflow: visible; }
+.tb-board, .tb-deck { transform-box: fill-box; transform-origin: center; }
+.tb-grip { fill: currentColor; }
+.tb-graphic { fill: var(--muted); }
+.tb-wheels rect { fill: currentColor; opacity: 0.6; }
+@keyframes tb-roll {
+  0%          { transform: translateX(9em); }
+  4%          { transform: translateX(6.6em); }
+  8%          { transform: translateX(4.9em); }
+  12%         { transform: translateX(3.6em); }
+  16%         { transform: translateX(2.7em); }
+  20%         { transform: translateX(2.0em); }
+  24%         { transform: translateX(1.5em); }
+  28%         { transform: translateX(1.1em); }
+  32%         { transform: translateX(0.85em); }
+  36%         { transform: translateX(0.65em); }
+  40%         { transform: translateX(0.5em); }
+  44%         { transform: translateX(0.4em); }
+  48%         { transform: translateX(0.32em); }
+  52%         { transform: translateX(0.25em); }
+  56%         { transform: translateX(0.2em); }
+  64%         { transform: translateX(0.14em); }
+  72%         { transform: translateX(0.09em); }
+  80%         { transform: translateX(0.05em); }
+  88%         { transform: translateX(0.02em); }
+  96%, 100%   { transform: none; }
+}
+@keyframes tb-air {
+  0%          { transform: none; }
+  36%         { transform: translateY(-0.05em); }
+  40%         { transform: translateY(-0.35em); }
+  44%         { transform: translateY(-0.6em); }
+  48%         { transform: translateY(-0.75em); }
+  52%         { transform: translateY(-0.82em); }
+  56%         { transform: translateY(-0.8em); }
+  60%         { transform: translateY(-0.74em); }
+  64%         { transform: translateY(-0.62em); }
+  68%         { transform: translateY(-0.46em); }
+  72%         { transform: translateY(-0.28em); }
+  76%         { transform: translateY(-0.1em); }
+  80%, 100%   { transform: none; }
+}
+@keyframes tb-board {
+  0%          { transform: none; }
+  36%         { transform: rotate(-18deg); }
+  40%         { transform: rotate(-8deg); }
+  44%         { transform: none; }
+  80%         { transform: scale(1.06, 0.8); }
+  84%, 100%   { transform: none; }
+}
+@keyframes tb-deck {
+  0%          { transform: none; }
+  40%         { transform: scaleY(0.4); }
+  44%         { transform: scaleY(-1); }
+  48%         { transform: scaleY(-0.4); }
+  52%         { transform: none; }
+  56%         { transform: scaleY(0.4); }
+  64%         { transform: scaleY(-1); }
+  72%         { transform: scaleY(-0.4); }
+  80%, 100%   { transform: none; }
+}
+.tb { animation: tb-roll 1600ms steps(1, end) calc(1 * var(--beat)) both; }
+.tb-air { animation: tb-air 1600ms steps(1, end) calc(1 * var(--beat)) both; }
+.tb-board { animation: tb-board 1600ms steps(1, end) calc(1 * var(--beat)) both; }
+.tb-deck { animation: tb-deck 1600ms steps(1, end) calc(1 * var(--beat)) both; }
 /* Everything below the header lands last */
 main > section + section, .facts, .cover { animation: boot 400ms var(--ease-out) calc(6 * var(--beat)) backwards; }
 .label::after { transform-origin: left; animation: rule 700ms var(--ease-out) calc(8 * var(--beat)) backwards; }

@@ -3,7 +3,7 @@
   <header class="wrap page-head">
     <a class="back" href="/projects/">← All projects</a>
     <p class="eyebrow">{{ with .Params.kicker }}{{ . }} · {{ end }}{{ .Date.Format "January 2006" }}</p>
-    <h1 class="display">{{ .Title }}</h1>
+    <h1 class="display">{{ .Title }}{{ if .Params.titleBoard }}{{ partial "title-board.html" . }}{{ end }}</h1>
     <p class="lede">{{ .Params.summary }}</p>
     <p class="project-links">
       {{ with .Params.demo }}<a href="{{ . }}" rel="noopener">Live demo ↗</a>{{ end }}
