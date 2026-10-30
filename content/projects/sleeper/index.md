@@ -29,4 +29,4 @@ Every API call goes through a SQLite cache and a per-API rate limiter, and picks
 
 ## Result
 
-A leave-one-out evaluation gives a **45%** album hit rate in the top 20, against **47%** for a naive similar-artists baseline. The reason this gap exists is because the evaluation rewards predicting albums you already like, and the popularity penalty deliberately trades a little of that score for less well known picks.
+A leave-one-out evaluation gives a **45%** album hit rate in the top 20, against **47%** for a similar-artists baseline. The reason this gap exists is because the evaluation rewards predicting albums you already like, and the popularity penalty deliberately trades a bit of that score for less well known picks.
