@@ -30,7 +30,7 @@
   <p class="also">
     <span>Also built:</span>
     {{ range where $projects "Params.status" "!=" "wip" }}<a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}
-    <a class="also-all" href="/projects/">All projects →</a>
+    <a class="also-all" href="/projects/" data-slide>All projects →</a>
   </p>
 </section>
 {{ end }}

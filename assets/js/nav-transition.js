@@ -1,8 +1,8 @@
-// The page slide (see main.css) only plays for clicks on the header nav.
+// The page slide (see main.css) only plays for clicks on the header nav, and on links that opt in with data-slide.
 // Every other navigation, including back/forward, loads without it.
 let navClick = false;
 document.addEventListener('click', (e) => {
-  navClick = !!e.target.closest('.site-header nav a');
+  navClick = !!e.target.closest('.site-header nav a, a[data-slide]');
 });
 // Only reset when the page comes back from the back/forward cache. A plain pageshow also fires
 // when the first load finishes, which can land after a quick nav click and wipe the flag.
