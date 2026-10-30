@@ -8,7 +8,7 @@
     {{ end }}
     <div class="card-body">
       <span class="card-num">{{ printf "%02d" .n }}</span>
-      <h3>{{ $p.Title }}</h3>
+      <h3>{{ $p.Title }}{{ if eq $p.Params.status "wip" }} <span class="wip">WIP</span>{{ end }}</h3>
       <p>{{ $p.Params.summary }}</p>
       <ul class="tags" aria-label="Stack">
         {{ range first 4 $p.Params.stack }}<li>{{ . }}</li>{{ end }}
