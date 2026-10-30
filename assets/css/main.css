@@ -32,6 +32,16 @@
 /* ---------- Base ---------- */
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+/* Scrollbar: a thin rounded thumb floating in the dark track; it goes red on hover, like links.
+   Chrome and Safari use the ::-webkit-scrollbar parts; Firefox takes the thin width and the two colours. */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--muted) 45%, var(--bg)) padding-box; border: 2px solid transparent; border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover, ::-webkit-scrollbar-thumb:active { background-color: var(--accent); }
+::-webkit-scrollbar-corner { background: var(--bg); }
+@supports not selector(::-webkit-scrollbar) {
+  html { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--muted) 45%, var(--bg)) var(--bg); }
+}
 body {
   margin: 0;
   background: var(--bg);
