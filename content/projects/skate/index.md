@@ -2,6 +2,7 @@
 title: First Try
 kicker: In progress
 status: wip
+now: Labeling clips for the trick classifier
 titleBoard: true
 date: 2026-10-30
 weight: 3

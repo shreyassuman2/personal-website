@@ -9,12 +9,28 @@
   </p>
 </section>
 
+{{/* Home spotlights what's being built right now (the first project marked status: wip);
+     the full gallery of image cards lives on the Projects page */}}
+{{ $projects := (site.GetPage "/projects").Pages.ByWeight }}
 <section class="work wrap" aria-labelledby="work-title">
+  {{ with index (where $projects "Params.status" "wip") 0 }}
+  <h2 id="work-title" class="label">// Now building</h2>
+  <a class="now" href="{{ .RelPermalink }}">
+    <div class="now-text">
+      <h3 class="now-title">{{ .Title }} <span class="wip">WIP</span></h3>
+      <p class="now-sum">{{ .Params.summary }}</p>
+      {{ with .Params.now }}<p class="eyebrow now-status"><span class="prompt">&gt;</span> {{ . }}</p>{{ end }}
+      <span class="now-go">Follow along →</span>
+    </div>
+    <figure class="now-fig">{{ partial "skate.html" . }}</figure>
+  </a>
+  {{ else }}
   <h2 id="work-title" class="label">// Selected work</h2>
-  <ol class="cards">
-    {{ range $i, $p := (site.GetPage "/projects").Pages.ByWeight }}
-      {{ partial "card.html" (dict "page" $p "n" (add $i 1)) }}
-    {{ end }}
-  </ol>
+  {{ end }}
+  <p class="also">
+    <span>Also built:</span>
+    {{ range where $projects "Params.status" "!=" "wip" }}<a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}
+    <a class="also-all" href="/projects/">All projects →</a>
+  </p>
 </section>
 {{ end }}
