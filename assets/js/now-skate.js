@@ -6,9 +6,16 @@
   if (!svg) return;
   // The ground rushes by much faster than the skater speeds up, so hovering feels like picking up speed
   const ground = svg.querySelector('.sk-ground');
+  // Speed lines (.sk-speed) only exist on hover and run on their own clocks, so they're left alone
   const rate = (r, g) => {
-    for (const a of svg.getAnimations({ subtree: true })) a.updatePlaybackRate(a.effect.target === ground ? g : r);
+    for (const a of svg.getAnimations({ subtree: true })) {
+      const t = a.effect.target;
+      if (!t.closest('.sk-speed')) a.updatePlaybackRate(t === ground ? g : r);
+    }
   };
-  panel.addEventListener('mouseenter', () => rate(18.8 / 15, 3));
-  panel.addEventListener('mouseleave', () => rate(1, 1));
+  // At rest the home skater runs a touch faster than About's
+  const rest = 1.15;
+  rate(rest, rest);
+  panel.addEventListener('mouseenter', () => rate(1.7, 6));
+  panel.addEventListener('mouseleave', () => rate(rest, rest));
 })();

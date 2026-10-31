@@ -158,8 +158,12 @@ a:hover { color: var(--accent); }
   /* On hover the skater plays faster (assets/js/now-skate.js) with three in-betweens per keyframe (~10fps, still choppy),
      and two ghost copies trail it by a frame each as motion blur. Trick names keep steps(1): one name at a time. */
   .now:hover :is(.sk-legs, .sk-upper, .sk-board, .sk-shadow) { animation-timing-function: steps(3, end); }
-  /* The ground rushes by at 3x (assets/js/now-skate.js); 6 steps per cycle keeps it near the skater's ~10fps */
-  .now:hover .sk-ground { animation-timing-function: steps(6, end); }
+  /* The ground rushes by at 6x (assets/js/now-skate.js); 3 steps per cycle keeps it choppy (~11fps)
+     and each jump under half a dash, so it still reads as moving left instead of strobing */
+  .now:hover .sk-ground { animation-timing-function: steps(3, end); }
+  /* Selling the speed: streaks whip past behind, and the skater leans forward into it */
+  .now:hover .sk-speed { display: inline; }
+  .now:hover .sk-body { transform: skewX(-3deg); }
   .now:hover .sk-ghost { opacity: 0.3; }
   .now:hover .sk-ghost-2 { opacity: 0.12; }
 }
@@ -167,6 +171,17 @@ a:hover { color: var(--accent); }
 .sk-ghost { opacity: 0; transition: opacity 120ms ease; }
 .sk-ghost-1 * { animation-delay: 0.08s; }
 .sk-ghost-2 * { animation-delay: 0.16s; }
+/* At rest the home skater gets two in-betweens per keyframe (About keeps the bare held frames for its force arrows);
+   the ground ticks three times as often to match */
+.now :is(.sk-legs, .sk-upper, .sk-board, .sk-shadow) { animation-timing-function: steps(3, end); }
+.now .sk-ground { animation-timing-function: steps(12, end); }
+.sk-body { transform-box: fill-box; transform-origin: bottom; transition: transform 160ms var(--ease-out); }
+/* Each streak crosses the frame right to left on its own short clock, in held frames like the rest */
+.sk-speed { display: none; }
+.sk-speed line { stroke: var(--line); stroke-width: 0.5; animation: sk-streak 600ms steps(6, end) infinite; }
+.sk-speed line:nth-child(2) { animation-duration: 700ms; animation-delay: -350ms; }
+.sk-speed line:nth-child(3) { animation-duration: 550ms; animation-delay: -150ms; }
+@keyframes sk-streak { from { transform: none; } to { transform: translateX(-200px); } }
 .also { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; margin: 1.5rem 0 0; font: 500 0.8125rem/1.6 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
 .also a { color: var(--ink); text-decoration: none; transition: color 0.2s var(--ease); }
 .also a:hover { color: var(--accent); }

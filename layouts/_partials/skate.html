@@ -5,6 +5,10 @@
 <svg class="skate-svg" viewBox="220 84 160 62" role="img" aria-label="{{ if .forces }}Animation: a blocky skateboarder does an ollie, a kickflip, a pop shuvit and a 360 flip, with force arrows. At the pop the back foot pushes the tail down (F) and the ground pushes back up (N); the front foot's friction drags the nose up (f); in the air only gravity acts (mg); on landing the ground pushes up at both wheels (N).{{ else }}Animation: a blocky skateboarder does an ollie, a kickflip, a pop shuvit and a 360 flip.{{ end }}">
   <g class="sk-names"><text x="225" y="92">Ollie</text><text x="225" y="92">Kickflip</text><text x="225" y="92">Pop shuvit</text><text x="225" y="92">360 flip</text></g>
   <line class="sk-ground" x1="200" y1="131" x2="400" y2="131"/>
+  {{/* Speed lines streaking past behind the skater; only drawn while the home panel is hovered */}}
+  <g class="sk-speed" aria-hidden="true">
+    <line x1="385" y1="98" x2="397" y2="98"/><line x1="385" y1="112" x2="405" y2="112"/><line x1="385" y1="124" x2="395" y2="124"/>
+  </g>
   <g transform="translate(300 120)">
     <rect class="sk-shadow" x="-30" y="10" width="60" height="3"/>
     {{/* Two trailing copies (2, 1) under the real skater (0): hidden until the home panel is hovered, where they lag a frame behind as motion blur */}}
