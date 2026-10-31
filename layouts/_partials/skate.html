@@ -1,7 +1,8 @@
 {{/* Boxy trick loop (ollie, kickflip, pop shuvit, 360 flip), cropped close on the board: only the legs and the bottom of the torso are in frame.
      Free-body arrows flash in at each phase: the pop (F, N), the front foot's slide on the ollie (f), airtime (mg) and the landing (N).
-     Each arrow is drawn where the board sits in that held frame. Animated in main.css (.sk-*). */}}
-<svg class="skate-svg" viewBox="220 84 160 62" role="img" aria-label="Animation: a blocky skateboarder does an ollie, a kickflip, a pop shuvit and a 360 flip, with force arrows. At the pop the back foot pushes the tail down (F) and the ground pushes back up (N); the front foot's friction drags the nose up (f); in the air only gravity acts (mg); on landing the ground pushes up at both wheels (N).">
+     Each arrow is drawn where the board sits in that held frame. Animated in main.css (.sk-*).
+     Context: dict "forces" bool. Without forces it's just the skater and the trick names. */}}
+<svg class="skate-svg" viewBox="220 84 160 62" role="img" aria-label="{{ if .forces }}Animation: a blocky skateboarder does an ollie, a kickflip, a pop shuvit and a 360 flip, with force arrows. At the pop the back foot pushes the tail down (F) and the ground pushes back up (N); the front foot's friction drags the nose up (f); in the air only gravity acts (mg); on landing the ground pushes up at both wheels (N).{{ else }}Animation: a blocky skateboarder does an ollie, a kickflip, a pop shuvit and a 360 flip.{{ end }}">
   <g class="sk-names"><text x="225" y="92">Ollie</text><text x="225" y="92">Kickflip</text><text x="225" y="92">Pop shuvit</text><text x="225" y="92">360 flip</text></g>
   <line class="sk-ground" x1="200" y1="131" x2="400" y2="131"/>
   <g transform="translate(300 120)">
@@ -18,6 +19,7 @@
       </g>
     </g>
   </g>
+  {{ if .forces }}
   <g class="sk-force sk-f-pop">
     <line x1="276" y1="104" x2="276" y2="124"/><polygon points="273,123 279,123 276,128"/><text x="272" y="112" text-anchor="end">F</text>
     <line x1="270" y1="145" x2="270" y2="135"/><polygon points="267,136 273,136 270,131"/><text x="274" y="143">N</text>
@@ -77,4 +79,5 @@
     <line x1="279" y1="145" x2="279" y2="135"/><polygon points="276,136 282,136 279,131"/><text x="283" y="143">N</text>
     <line x1="321" y1="145" x2="321" y2="135"/><polygon points="318,136 324,136 321,131"/><text x="325" y="143">N</text>
   </g>
+  {{ end }}
 </svg>

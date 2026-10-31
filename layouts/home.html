@@ -22,7 +22,7 @@
       {{ with .Params.now }}<p class="eyebrow now-status"><span class="prompt">&gt;</span> {{ . }}</p>{{ end }}
       <span class="now-go">Follow along →</span>
     </div>
-    <figure class="now-fig">{{ partial "skate.html" . }}</figure>
+    <figure class="now-fig">{{ partial "skate.html" (dict "forces" false) }}</figure>
   </a>
   {{ else }}
   <h2 id="work-title" class="label">// Selected work</h2>
