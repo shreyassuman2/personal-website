@@ -5,7 +5,7 @@ enableRobotsTXT = true
 disableKinds = ['taxonomy', 'term', 'rss']
 
 [params]
-  description = 'Shreyas Suman builds security tools and software. Projects: TalosAI and Sleeper.'
+  description = 'Shreyas Suman builds software and security tools. Now building First Try, an iOS app that names your skate tricks. Also: TalosAI and Sleeper.'
   github = 'https://github.com/shreyassuman2'
   linkedin = 'https://www.linkedin.com/in/shreyas-suman-ba9691355/'          # full profile URL; the link is hidden while empty
   cfBeaconToken = ''     # Cloudflare Web Analytics token; no script is emitted while empty

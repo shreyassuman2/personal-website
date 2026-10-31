@@ -155,18 +155,22 @@ a:hover { color: var(--accent); }
   .now { transition: transform 160ms var(--ease-out), box-shadow 160ms var(--ease-out), border-color 160ms ease; }
   .now:hover { transform: translate(-3px, -3px); box-shadow: 3px 3px 0 var(--accent); border-color: var(--accent); }
   .now:hover .now-go { color: var(--accent); }
-  /* On hover the skater plays faster (assets/js/now-skate.js) with three in-betweens per keyframe (~10fps, still choppy),
-     and two ghost copies trail it by a frame each as motion blur. Trick names keep steps(1): one name at a time. */
-  .now:hover :is(.sk-legs, .sk-upper, .sk-board, .sk-shadow) { animation-timing-function: steps(3, end); }
-  /* The ground rushes by at 6x (assets/js/now-skate.js); 3 steps per cycle keeps it choppy (~11fps)
-     and each jump under half a dash, so it still reads as moving left instead of strobing */
-  .now:hover .sk-ground { animation-timing-function: steps(3, end); }
-  /* Selling the speed: streaks whip past behind, and the skater leans forward into it */
-  .now:hover .sk-speed { display: inline; }
-  .now:hover .sk-body { transform: skewX(-3deg); }
-  .now:hover .sk-ghost { opacity: 0.3; }
-  .now:hover .sk-ghost-2 { opacity: 0.12; }
 }
+/* Keyboard focus gets the same lift as hover */
+.now:focus-visible { outline: none; transform: translate(-3px, -3px); box-shadow: 3px 3px 0 var(--accent); border-color: var(--accent); }
+.now:focus-visible .now-go { color: var(--accent); }
+/* Fast mode, set by assets/js/now-skate.js on hover, keyboard focus, or once on touch screens when the panel scrolls into view.
+   The skater plays faster with three in-betweens per keyframe (~10fps, still choppy), and two ghost copies trail it
+   by a frame each as motion blur. Trick names keep steps(1): one name at a time. */
+.now.is-fast :is(.sk-legs, .sk-upper, .sk-board, .sk-shadow) { animation-timing-function: steps(3, end); }
+/* The ground rushes by at 6x; 3 steps per cycle keeps it choppy (~11fps)
+   and each jump under half a dash, so it still reads as moving left instead of strobing */
+.now.is-fast .sk-ground { animation-timing-function: steps(3, end); }
+/* Selling the speed: streaks whip past behind, and the skater leans forward into it */
+.now.is-fast .sk-speed { display: inline; }
+.now.is-fast .sk-body { transform: skewX(-3deg); }
+.now.is-fast .sk-ghost { opacity: 0.3; }
+.now.is-fast .sk-ghost-2 { opacity: 0.12; }
 /* Ghosts stay in the DOM at opacity 0 so their animations keep running in sync with the skater */
 .sk-ghost { opacity: 0; transition: opacity 120ms ease; }
 .sk-ghost-1 * { animation-delay: 0.08s; }

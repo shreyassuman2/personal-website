@@ -11,3 +11,7 @@
 
 /fonts/*
   Cache-Control: public, max-age=2592000
+
+# Reachable by link, but kept out of search results
+/resume.pdf
+  X-Robots-Tag: noindex, noarchive
