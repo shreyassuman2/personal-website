@@ -1159,6 +1159,24 @@ a:hover { color: var(--accent); }
 .tb-air { animation: tb-air 1600ms steps(1, end) calc(1 * var(--beat)) both; }
 .tb-board { animation: tb-board 1600ms steps(1, end) calc(1 * var(--beat)) both; }
 .tb-deck { animation: tb-deck 1600ms steps(1, end) calc(1 * var(--beat)) both; }
+/* The first scroll down sends the board off (assets/js/title-board.js): it rocks back, lifts its nose and rolls out to the
+   right, speeding up, in the same held frames. Back at the top the class comes off and tb-roll brings it in again. */
+@keyframes tb-leave {
+  0%          { transform: none; }
+  8%          { transform: translateX(-0.08em); }
+  16%         { transform: translateX(-0.12em) rotate(-6deg); }
+  24%         { transform: translateX(0.1em) rotate(-10deg); }
+  32%         { transform: translateX(0.5em) rotate(-8deg); }
+  40%         { transform: translateX(1.2em) rotate(-4deg); }
+  48%         { transform: translateX(2.2em); }
+  56%         { transform: translateX(3.6em); }
+  64%         { transform: translateX(5.5em); }
+  72%         { transform: translateX(8em); }
+  80%         { transform: translateX(11.5em); }
+  88%         { transform: translateX(16em); }
+  96%, 100%   { transform: translateX(100vw); visibility: hidden; }
+}
+.tb.is-gone { animation: tb-leave 900ms steps(1, end) forwards; pointer-events: none; }
 /* Everything below the header lands last */
 main > section + section, .facts, .cover { animation: boot 400ms var(--ease-out) calc(6 * var(--beat)) backwards; }
 .label::after { transform-origin: left; animation: rule 700ms var(--ease-out) calc(8 * var(--beat)) backwards; }
