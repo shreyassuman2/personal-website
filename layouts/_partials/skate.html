@@ -7,6 +7,9 @@
   <line class="sk-ground" x1="200" y1="131" x2="400" y2="131"/>
   <g transform="translate(300 120)">
     <rect class="sk-shadow" x="-30" y="10" width="60" height="3"/>
+    {{/* Two trailing copies (2, 1) under the real skater (0): hidden until the home panel is hovered, where they lag a frame behind as motion blur */}}
+    {{ range slice 2 1 0 }}
+    <g class="sk-layer{{ if . }} sk-ghost sk-ghost-{{ . }}{{ end }}"{{ if . }} aria-hidden="true"{{ end }}>
     <g class="sk-board">
       <rect class="sk-grip" x="-32" y="0" width="64" height="2"/>
       <rect class="sk-graphic" x="-32" y="2" width="64" height="3"/>
@@ -18,6 +21,8 @@
         <rect x="-8" y="-48" width="16" height="25"/>
       </g>
     </g>
+    </g>
+    {{ end }}
   </g>
   {{ if .forces }}
   <g class="sk-force sk-f-pop">
