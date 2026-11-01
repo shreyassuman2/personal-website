@@ -1,7 +1,7 @@
 {{ define "main" }}
 <article class="project">
   <header class="wrap page-head">
-    <a class="back" href="/projects/">← All projects</a>
+    <a class="back" href="/projects/"><span class="arw">←</span> All projects</a>
     <p class="eyebrow">{{ with .Params.kicker }}{{ . }} · {{ end }}{{ .Date.Format "January 2006" }}</p>
     <h1 class="display">{{ .Title }}{{ if .Params.titleBoard }}{{ partial "title-board.html" . }}{{ end }}</h1>
     <p class="lede">{{ .Params.summary }}</p>
@@ -30,7 +30,7 @@
   {{ with .NextInSection | default (index .CurrentSection.Pages.ByWeight 0) }}
     {{ if ne .RelPermalink $.RelPermalink }}
     <nav class="wrap next" aria-label="Next project">
-      <a href="{{ .RelPermalink }}"><span class="label">Next</span><span class="next-title">{{ .Title }} →</span></a>
+      <a href="{{ .RelPermalink }}"><span class="label">Next</span><span class="next-title">{{ .Title }} <span class="arw">→</span></span></a>
     </nav>
     {{ end }}
   {{ end }}

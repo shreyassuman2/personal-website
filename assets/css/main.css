@@ -130,6 +130,18 @@ a:hover { color: var(--accent); }
 }
 .hero-links a:hover, .project-links a:hover { border-color: var(--accent); }
 
+/* ---------- Small motion: press feedback and arrow nudges ---------- */
+/* Pressable buttons give a little on press. :active is a real press on touch too, so it isn't hover-gated. */
+.hero-links a, .project-links a, .card-btn { transition: border-color 160ms ease, color 160ms ease, transform 160ms var(--ease-out); }
+.hero-links a:active, .project-links a:active, .card-btn:active { transform: scale(0.97); }
+/* Link arrows lean the way they point */
+.arw { display: inline-block; transition: transform 160ms var(--ease-out); }
+@media (hover: hover) and (pointer: fine) {
+  .also-all:hover .arw, .now:hover .now-go .arw, .next a:hover .arw { transform: translateX(0.25em); }
+  .back:hover .arw { transform: translateX(-0.25em); }
+}
+.now:focus-visible .now-go .arw { transform: translateX(0.25em); }
+
 /* ---------- Cards ---------- */
 .cards {
   list-style: none;

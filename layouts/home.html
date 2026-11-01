@@ -22,7 +22,7 @@
       <h3 class="now-title">{{ .Title }} <span class="wip">WIP</span></h3>
       <p class="now-sum">{{ .Params.summary }}</p>
       {{ with .Params.now }}<p class="eyebrow now-status"><span class="prompt">&gt;</span> {{ . }}</p>{{ end }}
-      <span class="now-go">Follow along →</span>
+      <span class="now-go">Follow along <span class="arw">→</span></span>
     </div>
     <figure class="now-fig">{{ partial "skate.html" (dict "forces" false) }}</figure>
   </a>
@@ -32,7 +32,7 @@
   <p class="also">
     <span>Also built:</span>
     {{ range where $projects "Params.status" "!=" "wip" }}<a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}
-    <a class="also-all" href="/projects/" data-slide>All projects →</a>
+    <a class="also-all" href="/projects/" data-slide>All projects <span class="arw">→</span></a>
   </p>
 </section>
 {{ end }}
