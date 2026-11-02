@@ -9,3 +9,4 @@ resources/_gen/
 .plans/
 .claude/
 skills-lock.json
+.vibe-wise/
