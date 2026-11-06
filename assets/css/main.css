@@ -1040,6 +1040,16 @@ a:hover { color: var(--accent); }
 .facts dd { margin: 0; }
 .cover { margin-block: 0 3rem; }
 .cover img, .shot img { border-radius: var(--radius); border: 1px solid var(--line); }
+/* Project demo video (front matter video:), with a Sound on button just under its right edge so it covers nothing */
+.video-frame { display: flex; flex-direction: column; align-items: flex-end; gap: 0.75rem; }
+.cover-video video { display: block; width: 100%; height: auto; border: 1px solid var(--line); background: var(--surface); }
+.sound-on {
+  font: 500 0.8125rem/1 var(--mono); letter-spacing: 0.04em; color: var(--ink);
+  background: none; border: 1px solid var(--line); padding: 0.5rem 0.75rem; cursor: pointer;
+  transition: border-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+.sound-on:hover { border-color: var(--accent); color: var(--accent); }
+.sound-on:active { transform: scale(0.97); }
 
 .prose { max-width: calc(40rem + 2 * var(--gutter)); }
 .prose h2 { font: 600 1.625rem/1.15 "Space Grotesk", var(--sans); letter-spacing: -0.02em; margin: 2.75rem 0 0.75rem; }
