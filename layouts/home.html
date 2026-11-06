@@ -11,28 +11,19 @@
   </p>
 </section>
 
-{{/* Home spotlights what's being built right now (the first project marked status: wip);
-     the full gallery of image cards lives on the Projects page */}}
-{{ $projects := (site.GetPage "/projects").Pages.ByWeight }}
+{{/* Home lists every project as one plain row, in weight order; the image cards live on the Projects page */}}
 <section class="work wrap" aria-labelledby="work-title">
-  {{ with index (where $projects "Params.status" "wip") 0 }}
-  <h2 id="work-title" class="label">// Now building</h2>
-  <a class="now" href="{{ .RelPermalink }}">
-    <div class="now-text">
-      <h3 class="now-title">{{ .Title }} <span class="wip">WIP</span></h3>
-      <p class="now-sum">{{ .Params.summary }}</p>
-      {{ with .Params.now }}<p class="eyebrow now-status"><span class="prompt">&gt;</span> {{ . }}</p>{{ end }}
-      <span class="now-go">Follow along <span class="arw">→</span></span>
-    </div>
-    <figure class="now-fig">{{ partial "skate.html" (dict "forces" false) }}</figure>
-  </a>
-  {{ else }}
-  <h2 id="work-title" class="label">// Selected work</h2>
-  {{ end }}
-  <p class="also">
-    <span>Also built:</span>
-    {{ range where $projects "Params.status" "!=" "wip" }}<a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}
-    <a class="also-all" href="/projects/" data-slide>All projects <span class="arw">→</span></a>
-  </p>
+  <h2 id="work-title" class="label">// Projects</h2>
+  <ol class="rows">
+    {{ range $i, $p := (site.GetPage "/projects").Pages.ByWeight }}
+    <li><a href="{{ $p.RelPermalink }}">
+      <span class="row-num">{{ printf "%02d" (add $i 1) }}</span>
+      <span class="row-title">{{ $p.Title }}{{ if eq $p.Params.status "wip" }} <span class="wip">WIP</span>{{ end }}</span>
+      <span class="row-sum">{{ $p.Params.summary }}</span>
+      <span class="arw" aria-hidden="true">→</span>
+    </a></li>
+    {{ end }}
+  </ol>
+  <p class="also"><a class="also-all" href="/projects/" data-slide>All projects <span class="arw">→</span></a></p>
 </section>
 {{ end }}
