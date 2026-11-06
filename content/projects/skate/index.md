@@ -5,7 +5,7 @@ status: wip
 now: Labeling clips for the trick classifier
 titleBoard: true
 date: 2026-10-30
-weight: 3
+weight: 4
 summary: An iOS app that watches a clip of you skating, names the trick, and tells you what to fix.
 stack: [Python, Flask, yt-dlp, ffmpeg, Create ML]
 ---

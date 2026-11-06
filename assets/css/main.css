@@ -218,6 +218,8 @@ a:hover { color: var(--accent); }
   filter: grayscale(0.7) brightness(0.85);
   transition: transform 300ms var(--ease-out), filter 200ms ease;
 }
+/* Opt-in per project (front matter coverFit: contain): show the whole cover, letterboxed */
+.card-media.fit-contain img { object-fit: contain; object-position: center; }
 @media (hover: hover) and (pointer: fine) {
   .card a:hover .card-media img { transform: scale(1.03); filter: none; }
 }

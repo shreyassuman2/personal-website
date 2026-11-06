@@ -4,7 +4,7 @@
   <a href="{{ $p.RelPermalink }}">
     {{ with $p.Resources.Get $p.Params.cover }}
       {{ $img := partial "img.html" (dict "img" . "widths" (slice 480 960) "sizes" "(min-width: 48rem) 30rem, 100vw" "alt" "") }}
-      <div class="card-media">{{ $img }}</div>
+      <div class="card-media{{ if eq $p.Params.coverFit "contain" }} fit-contain{{ end }}">{{ $img }}</div>
     {{ end }}
     <div class="card-body">
       <span class="card-num">{{ printf "%02d" .n }}</span>
