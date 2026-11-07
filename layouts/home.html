@@ -11,11 +11,11 @@
   </p>
 </section>
 
-{{/* Home lists every project as one plain row, in weight order; the image cards live on the Projects page */}}
+{{/* Home lists projects as plain rows, in weight order, skipping any with hideOnHome: true; the image cards (all projects) live on the Projects page */}}
 <section class="work wrap" aria-labelledby="work-title">
   <h2 id="work-title" class="label">// Projects</h2>
   <ol class="rows">
-    {{ range $i, $p := (site.GetPage "/projects").Pages.ByWeight }}
+    {{ range $i, $p := where (site.GetPage "/projects").Pages.ByWeight "Params.hideOnHome" "ne" true }}
     <li><a href="{{ $p.RelPermalink }}">
       <span class="row-num">{{ printf "%02d" (add $i 1) }}</span>
       <span class="row-title">{{ $p.Title }}{{ if eq $p.Params.status "wip" }} <span class="wip">WIP</span>{{ end }}</span>
