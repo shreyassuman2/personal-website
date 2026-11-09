@@ -1,6 +1,7 @@
 # shreyassuman.com
 
-My personal site: projects, about me, and links.
+personal site / portfolio 
+
 
 Built with [Hugo](https://gohugo.io) (v0.168.0) and hosted on Cloudflare Pages. 
 
