@@ -1,6 +1,6 @@
 ---
 title: Runway
-kicker: AWS × ACM SCU Hackathon
+kicker: AWS × A10 Hackathon
 date: 2026-11-08
 weight: 2
 summary: An AI finance team for early-stage startups. It catches wasted spend and negotiates vendor renewals by email.
