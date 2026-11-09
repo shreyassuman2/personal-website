@@ -1070,6 +1070,14 @@ a:hover { color: var(--accent); }
   }
 }
 .shot figcaption { font: 0.8125rem/1.5 var(--mono); color: var(--muted); margin-top: 0.75rem; }
+/* shot-pair: side by side at equal height (flex-grow = aspect ratio, set inline); stacked and centered on phones */
+.shot-pair .pair { display: flex; gap: 1rem; align-items: flex-start; }
+.shot-pair .pair img { width: 100%; }
+@media (max-width: 40rem) {
+  .shot-pair .pair { flex-direction: column; align-items: center; }
+  .shot-pair .pair > div { flex: none !important; width: 100%; }
+  .shot-pair .pair > div:first-child { width: 70%; }
+}
 
 .next { margin-top: 4rem; }
 .next a { display: block; text-decoration: none; padding-top: 1.5rem; border-top: 1px solid var(--line); }

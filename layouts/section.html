@@ -5,7 +5,10 @@
 </section>
 <section class="wrap">
   <ol class="cards">
-    {{ range $i, $p := .Pages.ByWeight }}
+    {{/* Projects page: newest first, unfinished (status: wip) projects last. Home uses weight (best first). */}}
+    {{ $newest := .Pages.ByDate.Reverse }}
+    {{ $pages := (where $newest "Params.status" "ne" "wip") | append (where $newest "Params.status" "eq" "wip") }}
+    {{ range $i, $p := $pages }}
       {{ partial "card.html" (dict "page" $p "n" (add $i 1)) }}
     {{ end }}
   </ol>

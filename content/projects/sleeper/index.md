@@ -2,7 +2,8 @@
 title: Sleeper
 kicker: Personal project
 date: 2026-10-10
-weight: 3
+weight: 4
+hideOnHome: true
 summary: Pick five albums you like and get one niche album to play next, plus four runners-up.
 stack: [Python, FastAPI, SQLite, React, Vite, Last.fm API, MusicBrainz]
 repo: https://github.com/shreyassuman2/sleeper

@@ -1,0 +1,14 @@
+{{- /* Two images side by side at the same height (each column's flex-grow is its aspect ratio), stacked on phones.
+     Usage: {{< shot-pair a="x.gif" aAlt="..." b="y.gif" bAlt="..." caption="..." >}} */ -}}
+<figure class="shot shot-pair">
+  <div class="pair">
+  {{ range slice "a" "b" }}
+    {{ $img := $.Page.Resources.Get ($.Get .) }}
+    {{ if not $img }}{{ errorf "shot-pair: %q not found in %s" ($.Get .) $.Page.File.Path }}{{ end }}
+    <div style="flex: {{ div (float $img.Width) $img.Height }} 1 0">
+      {{ partial "img.html" (dict "img" $img "widths" (slice 800 1600) "sizes" "(min-width: 64rem) 30rem, 100vw" "alt" ($.Get (printf "%sAlt" .))) }}
+    </div>
+  {{ end }}
+  </div>
+  {{ with .Get "caption" }}<figcaption>{{ . | markdownify }}</figcaption>{{ end }}
+</figure>
