@@ -1,5 +1,6 @@
 {{ define "main" }}
 <article class="project">
+  {{ if .Params.splat }}<canvas class="splat-bg" aria-hidden="true"></canvas>{{ end }}
   <header class="wrap page-head">
     <a class="back" href="/projects/"><span class="arw">←</span> All projects</a>
     <p class="eyebrow">{{ with .Params.kicker }}{{ . }} · {{ end }}{{ .Date.Format "January 2006" }}</p>

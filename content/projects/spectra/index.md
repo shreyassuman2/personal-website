@@ -11,6 +11,7 @@ demoLabel: Download
 cover: demo.gif
 coverFit: contain
 video: showcase.mp4
+splat: true
 coverAlt: "Spectra demo: the plugin window with a spectrum view, a freeze button, and size, diffuse, shift and mix knobs."
 ---
 

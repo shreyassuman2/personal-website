@@ -1070,6 +1070,16 @@ a:hover { color: var(--accent); }
   }
 }
 .shot figcaption { font: 0.8125rem/1.5 var(--mono); color: var(--muted); margin-top: 0.75rem; }
+
+/* Pixel-art gaussian splat behind a project page's header (front matter splat: true): drawn small by assets/js/splat.js,
+   scaled up with hard pixel edges, fading out before the body text */
+.project:has(.splat-bg) { position: relative; isolation: isolate; }
+.splat-bg {
+  position: absolute; z-index: -1; top: 0; left: 0; width: 100%; height: 44rem;
+  image-rendering: pixelated; pointer-events: none; opacity: 0.85;
+  mask-image: linear-gradient(to bottom, transparent, #000 12%, #000 60%, transparent);
+}
+@media (max-width: 50rem) { .splat-bg { opacity: 0.4; } }
 /* shot-pair: side by side at equal height (flex-grow = aspect ratio, set inline); stacked and centered on phones */
 .shot-pair .pair { display: flex; gap: 1rem; align-items: flex-start; }
 .shot-pair .pair img { width: 100%; }
