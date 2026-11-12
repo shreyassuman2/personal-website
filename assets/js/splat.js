@@ -4,7 +4,8 @@
 // the oldest snapshot, so the newest slot glows and older ones dim.
 // Each cell is a 3D gaussian projected to a 2D ellipse (EWA splatting), blended nearest first at a quarter of the
 // screen's resolution, then snapped to three 6-colour ramps (warm, violet, ice) with ordered dithering.
-// CSS scales it up with hard pixels. Decorative only: it sits behind the text and takes no input.
+// CSS scales it up with hard pixels. Decorative only: it sits behind the text, takes no input, and fades out as
+// the page scrolls down.
 (() => {
   const canvas = document.querySelector('.splat-bg');
   if (!canvas) return;
@@ -50,6 +51,7 @@
   let W, H, col, cool, trans, img, focal, cx, cy;
   const dist = 3.5, pitch = 0.52;
   let yaw = 0.6;
+  let scrollFade = 1, drawnFade = 1; // 1 at the top of the page, 0 once scrolled away; and the value last drawn
   function resize() {
     W = canvas.width = Math.max(1, Math.round(canvas.clientWidth / PX));
     H = canvas.height = Math.max(1, Math.round(canvas.clientHeight / PX));
@@ -139,7 +141,7 @@
     const d = img.data, n = RAMPS[0].length - 1;
     for (let py = 0; py < H; py++) for (let px = 0; px < W; px++) {
       const o = py * W + px;
-      const s = Math.min(1, col[o]) * n;
+      const s = Math.min(1, col[o]) * scrollFade * n;
       let i = Math.floor(s);
       if (s - i > BAYER[(py & 3) * 4 + (px & 3)]) i++;
       const rc = col[o] > 0 ? Math.min(2, cool[o] / col[o] * 2) : 0;
@@ -149,11 +151,27 @@
       d[o * 4] = r; d[o * 4 + 1] = g; d[o * 4 + 2] = b; d[o * 4 + 3] = 255;
     }
     ctx.putImageData(img, 0, 0);
+    drawnFade = scrollFade;
   }
 
   resize();
+
+  // Fade out with scroll, in the pixel style: scrollFade goes 1 -> 0 over the first 60% of the canvas height and
+  // scales the brightness before it is snapped to the palette, so the ring steps down through its shades and
+  // breaks up into dither patterns, dimmest parts first. Scroll events can fire many times per frame, so the
+  // update waits for the next frame
+  let fadeQueued = false;
+  function updateFade() {
+    fadeQueued = false;
+    scrollFade = Math.max(0, 1 - scrollY / (canvas.offsetHeight * 0.6));
+    if (still) render(); // no animation loop to pick the change up
+  }
+  addEventListener('scroll', () => {
+    if (!fadeQueued) { fadeQueued = true; requestAnimationFrame(updateFade); }
+  }, { passive: true });
+  updateFade();
+
   if (still) {
-    render();
     addEventListener('resize', () => { resize(); render(); });
     return;
   }
@@ -165,6 +183,7 @@
     requestAnimationFrame(frame);
     const dt = t - last;
     if (!visible || dt < 1000 / 24) return; // 24 fps reads as pixel art and saves battery
+    if (scrollFade === 0 && drawnFade === 0) return; // already drawn blank
     last = t;
     yaw += Math.min(dt, 100) * 0.00025;
     if (t - lastPush > 80) { push(); lastPush = t; }
