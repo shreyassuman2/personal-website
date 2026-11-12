@@ -17,12 +17,13 @@ coverAlt: "Spectra demo: the plugin window with a spectrum view, a freeze button
 
 ## Approach
 
-Spectra is a freeze effect: you play audio through it, hit **freeze**, and whatever was sounding at that moment turns into a pad that holds as long as you want. Instead of looping the raw audio, which tends to click at the loop point, it works in the frequency domain using an FFT.
+Spectra is a freeze effect: play audio through it, hit **freeze**, and whatever was sounding turns into a pad that holds as long as you want. Looping the raw audio would click at the loop point, so Spectra works in the frequency domain with an FFT instead.
 
-- **Always listening.** The plugin runs an FFT on the incoming audio all the time and keeps the last ~2 seconds as a ring of frequency snapshots: how loud each frequency is, and its exact pitch. Because the analysis never stops, there's always a moment ready to grab.
-- **Instant freeze.** Pressing freeze swaps that ring out for a fresh one instead of copying it, so the capture happens with no delay. The **Size** knob picks how much of the stored moment to use, from a single 20 ms slice to the full 2 seconds.
-- **Turning snapshots into sound.** The frozen snapshots are resynthesized back into audio continuously, with the pitch of each frequency kept steady so the pad doesn't warble.
-- **No clicks between pads.** Two voices take turns: freezing again starts the new pad on one voice while the old one fades out on the other.
-- **Shaping the texture.** Scan, drift, and spread move around inside the captured moment; blur, shift, shimmer, and tone reshape its sound; and **Absorb** slowly blends live input back into the frozen pad so it can evolve.
+- **Always listening.** An FFT runs on the input all the time and keeps the last ~2 seconds as a ring of frequency snapshots, so there's always a moment ready to grab.
+- **Instant freeze.** Freezing swaps that ring for a fresh one instead of copying it, so the capture has no delay. **Size** sets how much of the moment plays, from a 20 ms slice to the full 2 seconds.
+- **Steady pitch.** The snapshots are resynthesized continuously with each frequency's pitch held in place, so the pad doesn't warble.
+- **Re-freeze in time.** New in 1.1: while the song plays, Spectra can capture a new moment every bar, 1/2, 1/4, or 1/8, so the pad follows the music without drawing automation.
+- **No clicks.** Each capture starts on its own voice and crossfades with the one before it, even when re-freezes land faster than the old pad fades out.
+- **Shaping the texture.** Scan, drift, and spread move around inside the captured moment; blur, shimmer, and tone reshape it; **Shift** snaps to semitones with a menu of octaves, fifths, and fourths; and **Absorb** slowly blends live input back in so the pad evolves.
 
-With every effect running, Spectra uses about **1.8%** of one CPU core, because the audio thread never waits on a lock or allocates memory. An automated test suite checks the audio offline and keeps pitch error under **1 Hz** on every release.
+With every effect running, Spectra uses about **1.8%** of one CPU core, because the audio thread never waits on a lock or allocates memory. An automated test suite checks the audio offline on every release and keeps pitch error under **1 Hz**.
