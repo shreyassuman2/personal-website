@@ -1,0 +1,12 @@
+{{ define "main" }}
+{{/* Linktree-style page: one full-width button per entry in the page's `links` front matter (content/links.md) */}}
+<section class="wrap links-page">
+  <p class="eyebrow"><span class="prompt">&gt;</span> ls links/</p>
+  <h1 class="links-name">{{ site.Title }}</h1>
+  <ul class="link-list">
+    {{ range .Params.links }}
+    <li><a href="{{ .url }}" rel="noopener"><span>{{ .label }}</span><span class="arw" aria-hidden="true">↗</span></a></li>
+    {{ end }}
+  </ul>
+</section>
+{{ end }}
