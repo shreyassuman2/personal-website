@@ -14,7 +14,7 @@ coverAlt: "Runway demo: the dashboard's Overview, AI spend and SaaS tabs, the fo
 
 ## Problem
 
-Early-stage startups can't afford finance hires, so nobody watches the money. AI API bills spike, SaaS seats sit unused, subscriptions renew at full price, and expense policy only gets checked when someone remembers.
+At an early-stage startup, everyone has a company card and everyone is busy shipping, so the money mostly goes unwatched. A founder usually finds out the OpenAI bill tripled, or that half the Cursor seats haven't been opened in months, after the renewal has already gone through.
 
 ## Approach
 
